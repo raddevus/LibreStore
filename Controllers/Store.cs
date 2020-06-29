@@ -1,10 +1,10 @@
 using System;
 
 public class Store{
-    Int32 ID {get;set;}
-    Int32 MainKeyId {get;set;}
-    String Data {get;set;}
-    DateTime Created {get;set;}
-    DateTime Updated {get;set;}
-    bool Active{get;set;}
+    public Int32 ID {get;set;}
+    public Int32 MainTokenId {get;set;}
+    public String Data {get;set;}
+    public DateTime Created {get;set;}
+    public DateTime Updated {get;set;}
+    public bool Active{get;set;}
 }

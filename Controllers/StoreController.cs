@@ -30,5 +30,17 @@ namespace LibreStore.Controllers
             })
             .ToArray();
         }
+
+        [HttpPost("TestIt")]
+        public void Post(Store store){
+            //Console.WriteLine(mainToken);
+            Console.WriteLine(store.Data);
+        }
+
+        [HttpPost("SendOne")]
+        public String SendOne(int x){
+            Console.WriteLine(x.ToString());
+            return "Got it!";
+        }
     }
 }
