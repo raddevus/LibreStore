@@ -18,29 +18,29 @@ namespace LibreStore.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public IEnumerable<MainToken> Get()
+        [HttpPost("Get")]
+        public Store Get(Store store)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new MainToken
-            {
-                Key = rng.Next(-20, 55).ToString(),
-                Created = DateTime.Now.AddDays(index),
-                Active = true
-            })
-            .ToArray();
+            if (store.MainTokenKey == null || store.MainTokenKey == String.Empty){
+                // Since the user provides no MainTokenKey we cannot return
+                // Returning null returns an HTTP 204 code
+                // which means the request was processed but is returning nothing
+                return null;
+            }
+            if (store.ID == null || store.ID <= 0){
+                // same as null or empty MainTokenKey
+                return null;
+            }
+            // 1. look up store
+            return new Store(store.ID,store.MainTokenKey);
         }
 
-        [HttpPost("TestIt")]
-        public void Post(Store store){
-            //Console.WriteLine(mainToken);
-            Console.WriteLine(store.Data);
+        [HttpPost("Save")]
+        public void Save(Store store){
+            Console.WriteLine($"data: {store.Data}");
+            Console.WriteLine($"key: {store.MainTokenKey}");
         }
 
-        [HttpPost("SendOne")]
-        public String SendOne(int x){
-            Console.WriteLine(x.ToString());
-            return "Got it!";
-        }
+
     }
 }
