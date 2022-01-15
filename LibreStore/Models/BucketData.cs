@@ -10,6 +10,11 @@ public class BucketData{
         this.bucket = bucket;
     }
 
+    public BucketData(IPersistable dataPersistor)
+    {
+        this.dataPersistor = dataPersistor;
+    }
+
     public int Configure(){
         if (dataPersistor != null)
         {
@@ -33,6 +38,18 @@ public class BucketData{
                     and b.active = 1 and mt.active=1";
             sqliteProvider.command.Parameters.AddWithValue("$key",key);
             sqliteProvider.command.Parameters.AddWithValue("$id",bucket.Id);
+            return 0;
+        }
+        return 1;
+    }
+
+    public int ConfigureBucketIdSelect(long mainTokenId){
+        if (dataPersistor != null)
+        {
+            SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+            sqliteProvider.command.CommandText =
+                     @"select Id from bucket where MainTokenId = $id";
+            sqliteProvider.command.Parameters.AddWithValue("$id",mainTokenId);
             return 0;
         }
         return 1;

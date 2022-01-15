@@ -38,7 +38,7 @@ public class CyaController : Controller
     [HttpGet("GetData")]
     public ActionResult GetData(String key, Int64 bucketId){
         SqliteProvider sp = new SqliteProvider();
-        var mainTokenId = WriteUsage(sp,"GetData",key,false);
+        var mainTokenId = WriteUsage(sp,"GetCyaData",key,false);
         SqliteCyaProvider scp = new SqliteCyaProvider();
         Cya c = new Cya(bucketId,mainTokenId);
         CyaData cd = new CyaData(scp,c);

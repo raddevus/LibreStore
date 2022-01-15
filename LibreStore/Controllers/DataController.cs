@@ -70,6 +70,26 @@ public class DataController : Controller
         return new JsonResult(jsonResult);
     }
 
+    [HttpGet("GetBucketIds")]
+    public ActionResult GetBucketIds(String key){
+        SqliteProvider sp = new SqliteProvider();
+        var mainTokenId = WriteUsage(sp,"GetBucketIds",key,false);
+
+        if (mainTokenId == 0){
+            var jsonErrorResult = new {success=false,message="Couldn't save data because of invalid MainToken.Key."};
+            return new JsonResult(jsonErrorResult);    
+        }
+        sp = new SqliteProvider();
+        
+        BucketData bd = new BucketData(sp);
+        bd.ConfigureBucketIdSelect(mainTokenId);
+        List<long> allBucketIds = sp.GetAllBucketIds();
+        if (allBucketIds.Count() == 0){
+            return new JsonResult(new {success="false",message="No data available for that key."});
+        }
+        return new JsonResult(new {bucketIds=allBucketIds});
+    }
+
     [HttpGet("GetAllTokens")]
     public ActionResult GetAllTokens(String pwd){
         List<MainToken> allTokens = new List<MainToken>();

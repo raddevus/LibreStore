@@ -90,6 +90,33 @@ public class SqliteProvider : IPersistable{
         }
     }
 
+    public List<long> GetAllBucketIds(){
+        List<long> allBucketIds = new List<long>();
+        try{
+            connection.Open();
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    var id = reader.GetInt32(0);
+                    
+                    allBucketIds.Add(id);
+                    Console.WriteLine($"b.id: {id}");
+                }
+            }
+            return allBucketIds;
+        }
+        catch(Exception ex){
+            Console.WriteLine($"Error: {ex.Message}");
+            return allBucketIds;
+        }
+        finally{
+            if (connection != null){
+                connection.Close();
+            }
+        }
+    }
+
     public int GetOrInsert(){
         try{
             Console.WriteLine("GetOrInsert...");
