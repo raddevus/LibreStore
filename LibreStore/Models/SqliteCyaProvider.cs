@@ -39,37 +39,6 @@ public class SqliteCyaProvider : IPersistable{
         }
     }
 
-    public List<MainToken> GetAllTokens(){
-        command.CommandText = "Select * from MainToken";
-        List<MainToken> allTokens = new List<MainToken>();
-        try{
-            connection.Open();
-            using (var reader = command.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    var id = reader.GetInt32(0);
-                    var ownerId = reader.GetInt32(1);
-                    var key = reader.GetString(2);
-                    var created = reader.GetString(3);
-                    var active = reader.GetInt16(4);
-                    allTokens.Add(new MainToken(id,key,DateTime.Parse(created),ownerId,Convert.ToBoolean(active)));
-                    Console.WriteLine($"key: {key}");
-                }
-            }
-            return allTokens;
-        }
-        catch(Exception ex){
-            Console.WriteLine($"Error: {ex.Message}");
-            return allTokens;
-        }
-        finally{
-            if (connection != null){
-                connection.Close();
-            }
-        }
-    }
-
     public int GetOrInsert(){
         try{
             Console.WriteLine("GetOrInsert...");
@@ -95,7 +64,7 @@ public class SqliteCyaProvider : IPersistable{
         }
     }
 
-    public Bucket GetBucket(){
+    public Cya GetCyaBucket(){
         try{
             Console.WriteLine("GetCyaBucket...");
             connection.Open();
@@ -115,15 +84,15 @@ public class SqliteCyaProvider : IPersistable{
                     updated = reader.GetString(4);
                 }
                 var active = reader.GetBoolean(5);
-                Bucket b = new Bucket(id,mainTokenId,data,created,updated,active);
-                Console.WriteLine($"GetBucket() id: {b.Id}");
+                Cya c = new Cya(id,mainTokenId,data,created,updated,active);
+                Console.WriteLine($"GetBucket() id: {c.Id}");
                 reader.Close();
-                return b;
+                return c;
             }
         }
         catch(Exception ex){
             Console.WriteLine($"Error: {ex.Message}");
-            return new Bucket(0,0);
+            return new Cya(0,0);
         }
         finally{
             if (connection != null){

@@ -13,9 +13,9 @@ public class CyaData{
     public int Configure(){
         if (dataPersistor != null)
         {
-            SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+            SqliteCyaProvider sqliteProvider = dataPersistor as SqliteCyaProvider;
             
-            sqliteProvider.command.CommandText = @"INSERT into Cya (mainTokenId,data)values($mainTokenId,$data);SELECT last_insert_rowid()";
+            sqliteProvider.command.CommandText = @"INSERT into CyaBucket (mainTokenId,data)values($mainTokenId,$data);SELECT last_insert_rowid()";
             sqliteProvider.command.Parameters.AddWithValue("$mainTokenId",cya.MainTokenId);
             sqliteProvider.command.Parameters.AddWithValue("$data",cya.Data);
             return 0;
@@ -26,11 +26,11 @@ public class CyaData{
     public int ConfigureSelect(String key){
         if (dataPersistor != null)
         {
-            SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
-            sqliteProvider.command.CommandText = @"select b.* from MainToken as mt 
-                    join cya as b on mt.id = b.mainTokenId 
-                    where mt.Key=$key and b.Id = $id
-                    and b.active = 1 and mt.active=1";
+            SqliteCyaProvider sqliteProvider = dataPersistor as SqliteCyaProvider;
+            sqliteProvider.command.CommandText = @"select c.* from MainToken as mt 
+                    join cya as c on mt.id = c.mainTokenId 
+                    where mt.Key=$key and c.Id = $id
+                    and c.active = 1 and mt.active=1";
             sqliteProvider.command.Parameters.AddWithValue("$key",key);
             sqliteProvider.command.Parameters.AddWithValue("$id",cya.Id);
             return 0;
