@@ -41,7 +41,7 @@ public class CyaController : Controller
         var mainTokenId = WriteUsage(sp,"GetData",key,false);
         SqliteCyaProvider scp = new SqliteCyaProvider();
         Cya c = new Cya(bucketId,mainTokenId);
-        CyaData cd = new CyaData(sp,c);
+        CyaData cd = new CyaData(scp,c);
         cd.ConfigureSelect(key);
         c = scp.GetCyaBucket();
 

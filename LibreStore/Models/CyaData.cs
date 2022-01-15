@@ -28,7 +28,7 @@ public class CyaData{
         {
             SqliteCyaProvider sqliteProvider = dataPersistor as SqliteCyaProvider;
             sqliteProvider.command.CommandText = @"select c.* from MainToken as mt 
-                    join cya as c on mt.id = c.mainTokenId 
+                    join cyabucket as c on mt.id = c.mainTokenId 
                     where mt.Key=$key and c.Id = $id
                     and c.active = 1 and mt.active=1";
             sqliteProvider.command.Parameters.AddWithValue("$key",key);
