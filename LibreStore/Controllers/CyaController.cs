@@ -36,13 +36,18 @@ public class CyaController : Controller
     }
 
     [HttpGet("GetData")]
-    public ActionResult GetData(String key, Int64 bucketId){
+    public ActionResult GetData(String key){
         SqliteProvider sp = new SqliteProvider();
         var mainTokenId = WriteUsage(sp,"GetCyaData",key,false);
+        if (mainTokenId == 0){
+            var jsonErrorResult = new {success=false,message="Couldn't retrieve Cya data because of invalid MainToken.Key."};
+            return new JsonResult(jsonErrorResult);    
+        }
+        
         SqliteCyaProvider scp = new SqliteCyaProvider();
-        Cya c = new Cya(bucketId,mainTokenId);
+        Cya c = new Cya(mainTokenId);
         CyaData cd = new CyaData(scp,c);
-        cd.ConfigureSelect(key);
+        cd.ConfigureSelect(mainTokenId);
         c = scp.GetCyaBucket();
 
         // if Bucket.Id is > 0 then a valid bucket was returned

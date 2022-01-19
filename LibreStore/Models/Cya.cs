@@ -11,6 +11,9 @@ public class Cya{
     public DateTime? Updated{get;set;}
     public bool Active{get;set;}
 
+    public Cya(Int64 mainTokenId){
+        MainTokenId = mainTokenId;
+    }
     public Cya(Int64 id, Int64 mainTokenId){
         Id = id;
         MainTokenId = mainTokenId;

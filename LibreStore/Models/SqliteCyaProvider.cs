@@ -9,7 +9,7 @@ public class SqliteCyaProvider : IPersistable{
                @"CREATE TABLE IF NOT EXISTS [CyaBucket]
                 (
                     [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                    [MainTokenId] INTEGER NOT NULL,
+                    [MainTokenId] INTEGER NOT NULL UNIQUE,
                     [Data] NVARCHAR(40000) check(length(Data) <= 40000),
                     [Created] NVARCHAR(30) default (datetime('now','localtime')) check(length(Created) <= 30),
                     [Updated] NVARCHAR(30) check(length(Updated) <= 30),
