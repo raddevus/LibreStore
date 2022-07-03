@@ -15,9 +15,11 @@ public class CyaData{
         {
             SqliteCyaProvider sqliteProvider = dataPersistor as SqliteCyaProvider;
             
-            sqliteProvider.command.CommandText = @"INSERT or REPLACE into CyaBucket (mainTokenId,data)values($mainTokenId,$data);SELECT last_insert_rowid()";
+            sqliteProvider.command.CommandText = @"INSERT or REPLACE into CyaBucket (mainTokenId,data,hmac,iv)values($mainTokenId,$data);SELECT last_insert_rowid()";
             sqliteProvider.command.Parameters.AddWithValue("$mainTokenId",cya.MainTokenId);
             sqliteProvider.command.Parameters.AddWithValue("$data",cya.Data);
+            sqliteProvider.command.Parameters.AddWithValue("$hmac",cya.Hmac);
+            sqliteProvider.command.Parameters.AddWithValue("$iv",cya.Iv);
             return 0;
         }
         return 1;

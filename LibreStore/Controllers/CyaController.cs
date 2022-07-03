@@ -17,7 +17,10 @@ public class CyaController : Controller
     }
 
     [HttpPost("SaveData")]
-    public ActionResult SaveData([FromForm] String key, [FromForm] String data){
+    public ActionResult SaveData([FromForm] String key,
+            [FromForm] String data,
+            [FromForm] String hmac,
+            [FromForm] String iv){
         SqliteProvider sp = new SqliteProvider();
         var mainTokenId = WriteUsage(sp,"SaveCyaData",key);
         // if mainTokenId == 0 then an error occurred.
@@ -26,7 +29,7 @@ public class CyaController : Controller
             return new JsonResult(jsonErrorResult);    
         }
         SqliteCyaProvider scp = new SqliteCyaProvider();
-        Cya c = new Cya(mainTokenId,data);
+        Cya c = new Cya(mainTokenId,data,hmac,iv);
         CyaData cd = new CyaData(scp,c);
         cd.Configure();
         var cyaId = scp.Save();

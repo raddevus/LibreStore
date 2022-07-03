@@ -7,6 +7,8 @@ public class Bucket{
     [System.Text.Json.Serialization.JsonIgnore]
     public Int64 MainTokenId{get;set;}
     public String? Data{get;set;}
+    public String? Hmac{get;set;}
+    public String? Iv {get;set;}
     public DateTime? Created {get;set;}
     public DateTime? Updated{get;set;}
     public bool Active{get;set;}

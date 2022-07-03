@@ -20,6 +20,8 @@ public class SqliteProvider : IPersistable{
                     [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                     [MainTokenId] INTEGER NOT NULL,
                     [Data] NVARCHAR(8000) check(length(Data) <= 8000),
+                    [Hmac] NVARCHAR(64) NOT NULL check(length(Hmac) <= 64),
+                    [Iv] NVARCHAR(32) NOT NULL check(length(Iv) <= 32),
                     [Created] NVARCHAR(30) default (datetime('now','localtime')) check(length(Created) <= 30),
                     [Updated] NVARCHAR(30) check(length(Updated) <= 30),
                     [Active] BOOLEAN default(1)
