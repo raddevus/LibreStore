@@ -10,7 +10,7 @@ public class SqliteCyaProvider : IPersistable{
                 (
                     [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                     [MainTokenId] INTEGER NOT NULL UNIQUE,
-                    [Data] NVARCHAR(40000) check(length(Data) <= 40000),
+                    [Data] NVARCHAR(40000) NOT NULL check(length(Data) <= 40000),
                     [Hmac] NVARCHAR(64) NOT NULL check(length(Hmac) <= 64),
                     [Iv] NVARCHAR(32) NOT NULL check(length(Iv) <= 32),
                     [Created] NVARCHAR(30) default (datetime('now','localtime')) check(length(Created) <= 30),

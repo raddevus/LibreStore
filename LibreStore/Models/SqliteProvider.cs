@@ -19,7 +19,7 @@ public class SqliteProvider : IPersistable{
                 (
                     [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                     [MainTokenId] INTEGER NOT NULL,
-                    [Data] NVARCHAR(8000) check(length(Data) <= 8000),
+                    [Data] NVARCHAR(8000) NOT NULL check(length(Data) <= 8000),
                     [Hmac] NVARCHAR(64) NOT NULL check(length(Hmac) <= 64),
                     [Iv] NVARCHAR(32) NOT NULL check(length(Iv) <= 32),
                     [Created] NVARCHAR(30) default (datetime('now','localtime')) check(length(Created) <= 30),
@@ -155,16 +155,20 @@ public class SqliteProvider : IPersistable{
                 var id = reader.GetInt64(0);
                 var mainTokenId = reader.GetInt64(1);
                 var data = reader.GetString(2);
+                var hmac = reader.GetString(3);
+                var iv = reader.GetString(4);
                 var created = "";
-                if (!reader.IsDBNull(3)){
-                    created = reader.GetString(3);
+                if (!reader.IsDBNull(5)){
+                    created = reader.GetString(5);
                 }
                 var updated = "";
-                if (!reader.IsDBNull(4)){
-                    updated = reader.GetString(4);
+                if (!reader.IsDBNull(6)){
+                    updated = reader.GetString(6);
                 }
-                var active = reader.GetBoolean(5);
-                Bucket b = new Bucket(id,mainTokenId,data,created,updated,active);
+                var active = reader.GetBoolean(7);
+                Bucket b = new Bucket(id,mainTokenId,
+                        data,hmac,iv,
+                        created,updated,active);
                 Console.WriteLine($"GetBucket() id: {b.Id}");
                 reader.Close();
                 return b;

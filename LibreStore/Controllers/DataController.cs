@@ -36,7 +36,7 @@ public class DataController : Controller
     }
 
     [HttpGet("SaveData")]
-    public ActionResult SaveData(String key, String data){
+    public ActionResult SaveData(String key, String data, String hmac, String iv){
         SqliteProvider sp = new SqliteProvider();
         var mainTokenId = WriteUsage(sp,"SaveData",key);
         // if mainTokenId == 0 then an error occurred.
@@ -45,7 +45,7 @@ public class DataController : Controller
             return new JsonResult(jsonErrorResult);    
         }
         sp = new SqliteProvider();
-        Bucket b = new Bucket(mainTokenId,data);
+        Bucket b = new Bucket(mainTokenId,data,hmac,iv);
         BucketData bd = new BucketData(sp,b);
         bd.Configure();
         var bucketId = sp.Save();
