@@ -9,7 +9,7 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
 
     
-    public IHostApplicationLifetime _lifeTime;
+    private IHostApplicationLifetime _lifeTime;
 
     public HomeController(ILogger<HomeController> logger, IHostApplicationLifetime appLifetime)
     {
@@ -42,5 +42,10 @@ public class HomeController : Controller
         }
         _lifeTime.StopApplication();
         return new JsonResult(new {result="true",message="LibreStore is shutting down."});
+    }
+
+    [HttpGet("GetTime")]
+    public ActionResult GetTime(){
+        return new JsonResult(new {result="true",message=DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")});
     }
 }
