@@ -54,6 +54,30 @@ public class DataController : Controller
         return new JsonResult(jsonResult);
     }
 
+[HttpPost("SaveData")]
+public ActionResult SaveData([FromForm] String key,
+    [FromForm] String data,
+    [FromForm] String hmac,
+    [FromForm] String iv,
+    bool dataIsPosted=true)
+    {
+        SqliteProvider sp = new SqliteProvider();
+        var mainTokenId = WriteUsage(sp,"SaveData",key);
+        // if mainTokenId == 0 then an error occurred.
+        if (mainTokenId == 0){
+            var jsonErrorResult = new {success=false,message="Couldn't save data because of invalid MainToken.Key."};
+            return new JsonResult(jsonErrorResult);    
+        }
+        sp = new SqliteProvider();
+        Bucket b = new Bucket(mainTokenId,data,hmac,iv);
+        BucketData bd = new BucketData(sp,b);
+        bd.Configure();
+        var bucketId = sp.Save();
+    
+        var jsonResult = new {success=true,BucketId=bucketId};
+        return new JsonResult(jsonResult);
+    }
+
     [HttpGet("GetData")]
     public ActionResult GetData(String key, Int64 bucketId){
         SqliteProvider sp = new SqliteProvider();
@@ -128,7 +152,7 @@ public class DataController : Controller
         return mainTokenId;
     }
 
-    public string Hash(string value) 
+    static public string Hash(string value) 
     { 
         var sha = SHA256.Create();
         byte[] hash = sha.ComputeHash(Encoding.ASCII.GetBytes(value)); 
