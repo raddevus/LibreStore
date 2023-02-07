@@ -59,6 +59,31 @@ public class CyaController : Controller
         return new JsonResult(jsonResult);
     }
 
+    [HttpGet("DeleteData")]
+    public ActionResult DeleteData(String key)
+    {
+        SqliteProvider sp = new SqliteProvider();
+        var mainTokenId = WriteUsage(sp,"DeleteCyaData",key,false);
+        if (mainTokenId == 0){
+            var jsonErrorResult = new {success=false,message="Couldn't retrieve Cya data because of invalid MainToken.Key. Data not deleted!"};
+            return new JsonResult(jsonErrorResult);    
+        }
+
+        SqliteCyaProvider scp = new SqliteCyaProvider();
+        Cya c = new Cya(mainTokenId);
+        CyaData cd = new CyaData(scp,c);
+        cd.ConfigureDelete(mainTokenId);
+        var deletedCount = scp.DeleteCyaBucket();
+        Object? jsonResult = null;
+        if (deletedCount > -1){
+            jsonResult = new {success=(deletedCount > -1),message="Encrypted data & all associated data has been deleted."};
+        }
+        else{
+            jsonResult = new {success=(deletedCount > -1),message="Data does not exist for associated Cya Secret ID (MainToken). No data deleted."};
+        }
+        return new JsonResult(jsonResult);
+    }
+
     private Int64 WriteUsage(SqliteProvider sp, String action, String key="", bool shouldInsert=true){
         var ipAddress = Request?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "0.0.0.0";
         

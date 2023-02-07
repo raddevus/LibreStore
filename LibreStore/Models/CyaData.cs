@@ -37,4 +37,17 @@ public class CyaData{
         }
         return 1;
     }
+
+    public int ConfigureDelete(long mainTokenId){
+        if (dataPersistor != null)
+        {
+            SqliteCyaProvider sqliteProvider = dataPersistor as SqliteCyaProvider;
+            sqliteProvider.command.CommandText = 
+                @"delete from cyabucket
+                    where mainTokenId = $id";
+            sqliteProvider.command.Parameters.AddWithValue("$id",mainTokenId);
+            return 0;
+        }
+        return 1;
+    }
 }
