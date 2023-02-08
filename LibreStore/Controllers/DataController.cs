@@ -132,6 +132,31 @@ public ActionResult SaveData([FromForm] String key,
         return new JsonResult(allTokens);
     }
 
+    [HttpGet("DeleteData")]
+    public ActionResult DeleteData(String key, long bucketId)
+    {
+        SqliteProvider sp = new SqliteProvider();
+        var mainTokenId = WriteUsage(sp,"DeleteData",key,false);
+        if (mainTokenId == 0){
+            var jsonErrorResult = new {success=false,message="Couldn't retrieve Data because of invalid MainToken.Key. Data not deleted!"};
+            return new JsonResult(jsonErrorResult);
+        }
+
+        SqliteProvider scp = new SqliteProvider();
+        Bucket b = new Bucket(bucketId, mainTokenId);
+        BucketData bd = new BucketData(scp,b);
+        bd.ConfigureDelete(bucketId, mainTokenId);
+        var deletedCount = scp.DeleteBucket();
+        Object? jsonResult = null;
+        if (deletedCount > 0){
+            jsonResult = new {success=(deletedCount > -1),message="(Encrypted) data & all associated data has been deleted."};
+        }
+        else{
+            jsonResult = new {success=(deletedCount > -1),message="Data does not exist for associated MainToken. No data deleted."};
+        }
+        return new JsonResult(jsonResult);
+    }
+
     private Int64 WriteUsage(SqliteProvider sp, String action, String key="", bool shouldInsert=true){
         var ipAddress = Request?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "0.0.0.0";
         

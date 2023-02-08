@@ -56,4 +56,19 @@ public class BucketData{
         }
         return 1;
     }
+
+    public int ConfigureDelete(long bucketId, long mainTokenId){
+        if (dataPersistor != null)
+        {
+            SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+            sqliteProvider.command.CommandText =
+                @"delete from bucket
+                    where mainTokenId = $tokenId
+                    and id = $id";
+            sqliteProvider.command.Parameters.AddWithValue("$tokenId",mainTokenId);
+            sqliteProvider.command.Parameters.AddWithValue("$id", bucketId);
+            return 0;
+        }
+        return 1;
+    }
 }
