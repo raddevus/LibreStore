@@ -17,3 +17,7 @@ where mt.Key='thisOneIs9' and b.Id = 6;
 select mt.key,cya.* from cyabucket as cya 
 join maintoken as mt 
 on mt.id = cya.mainTokenId;
+
+select key, length(data) as dataSize from cyabucket join maintoken as mt on mt.id = cyabucket.maintokenid order by dataSize;
+
+
