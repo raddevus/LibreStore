@@ -36,31 +36,23 @@ public class DataController : Controller
     }
 
     [HttpGet("SaveData")]
-    public ActionResult SaveData(String key, String data, String hmac, String iv){
-        SqliteProvider sp = new SqliteProvider();
-        var mainTokenId = WriteUsage(sp,"SaveData",key);
-        // if mainTokenId == 0 then an error occurred.
-        if (mainTokenId == 0){
-            var jsonErrorResult = new {success=false,message="Couldn't save data because of invalid MainToken.Key."};
-            return new JsonResult(jsonErrorResult);    
-        }
-        sp = new SqliteProvider();
-        Bucket b = new Bucket(mainTokenId,data,hmac,iv);
-        BucketData bd = new BucketData(sp,b);
-        bd.Configure();
-        var bucketId = sp.Save();
-    
-        var jsonResult = new {success=true,BucketId=bucketId};
-        return new JsonResult(jsonResult);
+    public ActionResult SaveData(String key, String data, String hmac, String iv, String? intent = null)
+    {
+        return InternalSaveData(key, data,hmac,iv,intent);
     }
 
-[HttpPost("SaveData")]
-public ActionResult SaveData([FromForm] String key,
-    [FromForm] String data,
-    [FromForm] String hmac,
-    [FromForm] String iv,
+    [HttpPost("SaveData")]
+    public ActionResult SaveData([FromForm] String key,
+        [FromForm] String data,
+        [FromForm] String hmac,
+        [FromForm] String iv,
+        [FromForm] String? intent = null,
     bool dataIsPosted=true)
     {
+        return InternalSaveData(key, data,hmac,iv,intent);
+    }
+
+    private ActionResult InternalSaveData(String key, String data, String hmac, String iv, String? intent = null){
         SqliteProvider sp = new SqliteProvider();
         var mainTokenId = WriteUsage(sp,"SaveData",key);
         // if mainTokenId == 0 then an error occurred.
@@ -69,7 +61,8 @@ public ActionResult SaveData([FromForm] String key,
             return new JsonResult(jsonErrorResult);    
         }
         sp = new SqliteProvider();
-        Bucket b = new Bucket(mainTokenId,data,hmac,iv);
+        Bucket b = new Bucket(mainTokenId,intent,data,hmac,iv);
+        
         BucketData bd = new BucketData(sp,b);
         bd.Configure();
         var bucketId = sp.Save();
@@ -119,7 +112,7 @@ public ActionResult SaveData([FromForm] String key,
         List<MainToken> allTokens = new List<MainToken>();
         SqliteProvider sp = new SqliteProvider();
         if (Hash(pwd) != "86BC2CA50432385C30E2FAC2923AA6D19F7304E213DAB1D967A8D063BEF50EE1"){
-            WriteUsage(sp,"GetAllTokens - rejected");
+            WriteUsage(sp,"GetAllTokens - rejected","",false);
             return new JsonResult(new {result="false",message="couldn't authenticate request"});
         }
         sp = new SqliteProvider();
@@ -127,7 +120,7 @@ public ActionResult SaveData([FromForm] String key,
 
         sp = new SqliteProvider();
         // just want to get IP Address of 
-        WriteUsage(sp,"GetAllTokens");
+        WriteUsage(sp,"GetAllTokens","",false);
         
         return new JsonResult(allTokens);
     }

@@ -19,7 +19,8 @@ public class SqliteProvider : IPersistable{
                 (
                     [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                     [MainTokenId] INTEGER NOT NULL,
-                    [Data] NVARCHAR(8000) NOT NULL check(length(Data) <= 8000),
+                    [Intent] NVARCHAR(20) check(length(Intent) <= 20),
+                    [Data] NVARCHAR(20000) NOT NULL check(length(Data) <= 20000),
                     [Hmac] NVARCHAR(64) NOT NULL check(length(Hmac) <= 64),
                     [Iv] NVARCHAR(32) NOT NULL check(length(Iv) <= 32),
                     [Created] NVARCHAR(30) default (datetime('now','localtime')) check(length(Created) <= 30),
@@ -154,19 +155,20 @@ public class SqliteProvider : IPersistable{
                 reader.Read();
                 var id = reader.GetInt64(0);
                 var mainTokenId = reader.GetInt64(1);
-                var data = reader.GetString(2);
-                var hmac = reader.GetString(3);
-                var iv = reader.GetString(4);
+                String? intent = reader.GetString(2);
+                var data = reader.GetString(3);
+                var hmac = reader.GetString(4);
+                var iv = reader.GetString(5);
                 var created = "";
-                if (!reader.IsDBNull(5)){
-                    created = reader.GetString(5);
+                if (!reader.IsDBNull(6)){
+                    created = reader.GetString(6);
                 }
                 var updated = "";
-                if (!reader.IsDBNull(6)){
-                    updated = reader.GetString(6);
+                if (!reader.IsDBNull(7)){
+                    updated = reader.GetString(7);
                 }
-                var active = reader.GetBoolean(7);
-                Bucket b = new Bucket(id,mainTokenId,
+                var active = reader.GetBoolean(8);
+                Bucket b = new Bucket(id,mainTokenId,intent,
                         data,hmac,iv,
                         created,updated,active);
                 Console.WriteLine($"GetBucket() id: {b.Id}");
