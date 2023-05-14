@@ -155,7 +155,10 @@ public class SqliteProvider : IPersistable{
                 reader.Read();
                 var id = reader.GetInt64(0);
                 var mainTokenId = reader.GetInt64(1);
-                String? intent = reader.GetString(2);
+                String? intent = null;
+                if (!reader.IsDBNull(2)){
+                    intent = reader.GetString(2);
+                }
                 var data = reader.GetString(3);
                 var hmac = reader.GetString(4);
                 var iv = reader.GetString(5);
