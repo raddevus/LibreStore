@@ -8,7 +8,7 @@ public class SqliteProvider : IPersistable{
     private String [] allTableCreation = {
                 @"CREATE TABLE IF NOT EXISTS [MainToken]
                 (
-                    [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    [ID] INTEGER NOT NULL PRIMARY KEY,
                     [OwnerId] INTEGER NOT NULL default(0),
                     [Key] NVARCHAR(128)  NOT NULL UNIQUE check(length(Key) <= 128) check(length(key) >= 10),
                     [Created] NVARCHAR(30) default (datetime('now','localtime')) check(length(Created) <= 30),
@@ -17,7 +17,7 @@ public class SqliteProvider : IPersistable{
 
                 @"CREATE TABLE IF NOT EXISTS [Bucket]
                 (
-                    [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    [ID] INTEGER NOT NULL PRIMARY KEY,
                     [MainTokenId] INTEGER NOT NULL,
                     [Intent] NVARCHAR(20) check(length(Intent) <= 20),
                     [Data] NVARCHAR(20000) NOT NULL check(length(Data) <= 20000),
@@ -30,7 +30,7 @@ public class SqliteProvider : IPersistable{
 
                 @"CREATE TABLE IF NOT EXISTS [Usage]
                 (
-                    [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    [ID] INTEGER NOT NULL PRIMARY KEY,
                     [MainTokenId] INTEGER NOT NULL default(0),
                     [IpAddress] NVARCHAR(60) check(length(IpAddress) <= 60),
                     [Action] NVARCHAR(75) check(length(Action) <= 75),

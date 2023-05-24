@@ -8,7 +8,7 @@ public class SqliteCyaProvider : IPersistable{
     private String [] allTableCreation = {
                @"CREATE TABLE IF NOT EXISTS [CyaBucket]
                 (
-                    [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    [ID] INTEGER NOT NULL PRIMARY KEY,
                     [MainTokenId] INTEGER NOT NULL UNIQUE,
                     [Data] NVARCHAR(40000) NOT NULL check(length(Data) <= 40000),
                     [Hmac] NVARCHAR(64) NOT NULL check(length(Hmac) <= 64),
