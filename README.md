@@ -1,14 +1,9 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div >
-    <h1 class="display-4">What Is LibreStore?</h1>
+<h1 class="display-4">What Is LibreStore?</h1>
     <p>It's FOSS (Fully Open Source Software) which provides the fastest
          and easiest and secure way to store data from your web apps.</p>
     <h2>Fastest, Easiest?  Show Me An Example</h2>
     <p>Without knowing anything else you can create post your data using the following LibreStore WebAPI call:
-        
+        https://localhost:7138/data/SaveData?key=MustBeAtLeast10Chars&data=this is the first test data&hmac=fake hmac&iv=fake iv&intent=fake-test
     </p>
     <h2>How Is My Data Made Secure?</h2>
     <p>Here's what you need to know about securing your (or your user's) data.
@@ -39,5 +34,3 @@
     <h2>Where Can I See the Source Code?</h2>
     <p>At my GitHub repo: 
         <a href="https://github.com/raddevus/LibreStore" target="_blank">LibreStore source at GitHub</a></p>
-
-</div>
