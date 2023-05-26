@@ -8,7 +8,7 @@
          and easiest and secure way to store data from your web apps.</p>
     <h2>Fastest, Easiest?  Show Me An Example</h2>
     <p>Without knowing anything else you can create post your data using the following LibreStore WebAPI call:
-        
+        https://localhost:7138/data/SaveData?key=MustBeAtLeast10Chars&data=this is the first test data&hmac=fake hmac&iv=fake iv&intent=fake-test
     </p>
     <h2>How Is My Data Made Secure?</h2>
     <p>Here's what you need to know about securing your (or your user's) data.
@@ -38,6 +38,20 @@
     <p>It uses a Sqlite Database to store the user's data.</p>
     <h2>Where Can I See the Source Code?</h2>
     <p>At my GitHub repo: 
-        <a href="https://github.com/raddevus/LibreStore" target="_blank">LibreStore source at GitHub</a></p>
-
+        <a href="https://github.com/raddevus/LibreStore" target="_blank">LibreStore source at GitHub</a>
+    </p>
+    <h2>Are There Any Projects That Use LibreStore</h2>
+    <h3>C'YaPass: The FOSS Password Generator & Manager</h3>
+    <p>C'YaPass uses it to encrypt (using Authenticated Encryption & AES256, of course) the 
+        user's Site-Keys when the user decides to store them for retrieval from any other system.
+        The Site-Keys are encrypted with a password that only the user knows and they cannot be 
+        decrypted unless the proper password is used.
+        <p>You can try the <a href="https://cyapass.com/js/cya.htm" target="_blank">Web version of C'YaPass^</a> at the official site.</p>
+        <p>You can get the Android app at: </p>
+        <p>You can get the Windows App at: </p>
+        <p>You can get the Linux App at: </p>
+        <p>You can see the source code of C'YaPass built on ElectronJS which is cross-platform at: </p>
+        <p>You can see all of the source code for C'YaPass at: </p>
+    </p>
+    
 </div>
