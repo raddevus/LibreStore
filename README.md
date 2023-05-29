@@ -5,6 +5,10 @@
     <p>Without knowing anything else you can create post your data using the following LibreStore WebAPI call:
         https://localhost:7138/data/SaveData?key=MustBeAtLeast10Chars&data=this is the first test data&hmac=fake hmac&iv=fake iv&intent=fake-test
     </p>
+    <h2>Check Out The Live Github Page</h2>
+    <p>
+        Check out my Github page which has additional info and the ability to save test data from your browser at: <a href="https://raddevus.github.io/LibreStore/" target="_blank">https://raddevus.github.io/LibreStore/</a>
+    </p>
     <h2>How Is My Data Made Secure?</h2>
     <p>Here's what you need to know about securing your (or your user's) data.
         <ol>
