@@ -3,12 +3,38 @@
 }
 
 <div >
+    <h3>Please Note: 05-29-2023</h3>
+    <p>Please note, as of 05-29-2023 this is a work-in-progress and will updated relatively often.</p>
+    <p>Information is only partially complete.</p>
     <h1 class="display-4">What Is LibreStore?</h1>
     <p>It's FOSS (Fully Open Source Software) which provides the fastest
          and easiest and secure way to store data from your web apps.</p>
     <h2>Fastest, Easiest?  Show Me An Example</h2>
     <p>Without knowing anything else you can create post your data using the following LibreStore WebAPI call:
-        https://localhost:7138/data/SaveData?key=MustBeAtLeast10Chars&data=this is the first test data&hmac=fake hmac&iv=fake iv&intent=fake-test
+        <a target="_blank" href="https://actionmobile.app/data/SaveData?key=MustBeAtLeast10Chars&data=this is the first test data-Change it to your unique message.&hmac=fake hmac&iv=fake iv&intent=fake-test">
+        https://actionmobile.app/data/SaveData?key=MustBeAtLeast10Chars&data=this is the first test data-Change it to your unique message.&hmac=fake hmac&iv=fake iv&intent=fake-test</a>
+    </p>
+    <h3>Clicking Link Really Saves Data</h3>
+    <p>Yes, clicking that link actually saves the associated data to LibreStore.</p>
+    <p>When you run that command you'll see a new tab / window popup and provide you with a result.
+        If all goes well, then you will receive a success: true and new buckeId value that indicates the id for the data you just saved.
+    </p>
+    <p>
+        It will look something like the following (except your bucketId will be different):<br>
+        <img src="https://i.stack.imgur.com/QWSNj.png">
+    </p>
+    <h3>Test Data Will Be Deleted</h3>
+    <p>Please note that test data will be deleted on a random schedule.</p>
+    <h3>Can You Retrieve / See The Data?</h3>
+    <p>Yes, you can see the data you saved with the GET request above by clicking the following link:
+    </p>
+    <p>
+        <input type="text" id="bucketId">
+        <button onclick="getUserData()">Test</button>
+        <br><strong>Note:</strong> This pops open a new tab.  If you have a popup blocker it may not allow it.
+        <h3>Bad BucketIds Handled?</h3>
+        <p>Yes, if you enter an invalid bucketId, you'll see that the success object returns with a value of false.</p>
+        <p>Also, if you provide a MainToken Key which does not own the BucketId then it will not be returned either.</p>
     </p>
     <h2>How Is My Data Made Secure?</h2>
     <p>Here's what you need to know about securing your (or your user's) data.
@@ -55,3 +81,12 @@
     </p>
     
 </div>
+<script>
+    function getUserData(){
+        let link = `https://actionmobile.app/data/GetData?key=MustBeAtLeast10Chars&bucketId=${document.querySelector("#bucketId").value}`;
+        link.target = `_blank`;
+        link.rel = `noopener noreferrer`;
+        window.open(link, '_blank').focus();
+        
+    }
+</script>
