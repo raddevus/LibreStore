@@ -40,7 +40,7 @@ public class SqliteProvider : IPersistable{
                 @"CREATE TABLE IF NOT EXISTS [Owner]
                 (
                     [ID] INTEGER NOT NULL PRIMARY KEY,
-                    [Email] NVARCHAR(200) check(length(Email) <= 200),
+                    [Email] NVARCHAR(200) UNIQUE check(length(Email) <= 200),
                     [ExpireDate] NVARCHAR(30) check(length(Created) <= 30),
                     [Subscribed] BOOLEAN default(0),
                     [Created] NVARCHAR(30) default (datetime('now','localtime')) check(length(Created) <= 30),

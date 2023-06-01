@@ -20,8 +20,12 @@ public class OwnerData{
         if (dataPersistor != null)
         {
             SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
-            
-            sqliteProvider.command.CommandText = @"INSERT into Owner (email) values ($email);SELECT last_insert_rowid()";
+                        
+            sqliteProvider.command.CommandText = @"insert into Owner (email)  
+                    select $email 
+                    where not exists 
+                    (select email from owner where email=$email);
+                     select id from owner where email=$email and active=1";
             sqliteProvider.command.Parameters.AddWithValue("$email",owner.Email);
             return 0; // success
         }
