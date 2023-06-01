@@ -150,6 +150,33 @@ public class DataController : Controller
         return new JsonResult(jsonResult);
     }
 
+    [HttpGet("AddOwner")]
+    public ActionResult AddOwner(String key, String email){
+        SqliteProvider sp = new SqliteProvider();
+        var mainTokenId = WriteUsage(sp,"UpdateOwner",key,false);
+        if (mainTokenId == 0){
+            var jsonErrorResult = new {success=false,message="Couldn't add an owner because of invalid MainToken.Key. Please make sure you're using a valid MainToken Key!"};
+            return new JsonResult(jsonErrorResult);
+        }
+        SqliteProvider scp = new SqliteProvider();
+        Owner o = new Owner(email);
+        OwnerData od = new OwnerData(scp,o);
+        od.ConfigureInsert();
+        o.ID = scp.Save();
+        
+        MainTokenData mtd = new MainTokenData(scp,new MainToken(key,o.ID));
+        mtd.ConfigureUpdateOwner();
+        Object? jsonResult = null;
+         if (scp.UpdateOwner() == 0){
+            jsonResult = new {success=false,message="Couldn't update the Owner for that MainToken Key. Please try again."};            
+         }
+         else{
+            jsonResult = new {success=true,message="The Owner has been set for the MainToken Key."};
+         }
+         return new JsonResult(jsonResult);
+
+    }
+
     private Int64 WriteUsage(SqliteProvider sp, String action, String key="", bool shouldInsert=true){
         var ipAddress = Request?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "0.0.0.0";
         

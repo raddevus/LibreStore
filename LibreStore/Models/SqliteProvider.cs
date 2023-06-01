@@ -36,8 +36,17 @@ public class SqliteProvider : IPersistable{
                     [Action] NVARCHAR(75) check(length(Action) <= 75),
                     [Created] NVARCHAR(30) default (datetime('now','localtime')) check(length(Created) <= 30),
                     [Active] BOOLEAN default (1)
-                )
-                "};
+                )",
+                @"CREATE TABLE IF NOT EXISTS [Owner]
+                (
+                    [ID] INTEGER NOT NULL PRIMARY KEY,
+                    [Email] NVARCHAR(200) check(length(Email) <= 200),
+                    [ExpireDate] NVARCHAR(30) check(length(Created) <= 30),
+                    [Subscribed] BOOLEAN default(0),
+                    [Created] NVARCHAR(30) default (datetime('now','localtime')) check(length(Created) <= 30),
+                    [Updated] NVARCHAR(30) check(length(Updated) <= 30),
+                    [Active] BOOLEAN default(1)
+                )"};
 
     public SqliteProvider()
     {
@@ -214,6 +223,27 @@ public class SqliteProvider : IPersistable{
         
         try{
             Console.WriteLine("Saving...");
+            connection.Open();
+            Console.WriteLine("Opened.");
+            // id should be last id inserted into table
+            var id = Convert.ToInt64(command.ExecuteScalar());
+            Console.WriteLine("inserted.");
+            return id;
+        }
+        catch(Exception ex){
+            Console.WriteLine($"Error: {ex.Message}");
+            return 0;
+        }
+        finally{
+            if (connection != null){
+                connection.Close();
+            }
+        }
+    }
+
+    public Int64 UpdateOwner(){
+        try{
+            Console.WriteLine("Updating OwnerId...");
             connection.Open();
             Console.WriteLine("Opened.");
             // id should be last id inserted into table

@@ -42,13 +42,24 @@ public class MainTokenData{
     }
 
     public int ConfigureSelect(){
-            SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
-            String sqlCommand = @"select id from maintoken
-                    where key = $key and active=1";
-            
-            sqliteProvider.command.CommandText = sqlCommand;
-            sqliteProvider.command.Parameters.AddWithValue("$key",mainToken.Key);
-            return 0;
+        SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+        String sqlCommand = @"select id from maintoken
+                where key = $key and active=1";
+        
+        sqliteProvider.command.CommandText = sqlCommand;
+        sqliteProvider.command.Parameters.AddWithValue("$key",mainToken.Key);
+        return 0;
+    }
+
+    public int ConfigureUpdateOwner(){
+        SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+        // 2023-06-01 Discovered the sqlite Returning clause -- Returns value(s) after update or insert.
+        // See https://www.sqlite.org/lang_returning.html
+        String sqlCommand = @"update maintoken set OwnerId = $ownerId where key = $key and active=1 Returning ID";        
+        sqliteProvider.command.CommandText = sqlCommand;
+        sqliteProvider.command.Parameters.AddWithValue("$ownerId", mainToken.OwnerId);
+        sqliteProvider.command.Parameters.AddWithValue("$key", mainToken.Key);
+        return 0;
     }
 
 
