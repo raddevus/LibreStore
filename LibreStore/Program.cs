@@ -2,6 +2,7 @@ var builder = WebApplication.CreateBuilder(args);
 String AllowSpecificOrigins = "AllowSpecificOrigins";
 // Add services to the container.
 builder.Services.AddControllersWithViews(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
+builder.Services.AddHostedService<LifetimeEventsHostedService>();
 builder.Services.AddCors(options =>
             {
                 options.AddPolicy(name: AllowSpecificOrigins,
