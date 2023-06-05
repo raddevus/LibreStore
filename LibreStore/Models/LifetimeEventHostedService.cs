@@ -1,3 +1,4 @@
+using LibreStore.Models;
 internal class LifetimeEventsHostedService : IHostedService
 {
     private readonly ILogger _logger;
@@ -32,5 +33,6 @@ internal class LifetimeEventsHostedService : IHostedService
         _logger.LogInformation("OnStarted has been called.");
         // TODO: Add database TABLE creation scripts here
         // so they are only called upon start up of service.
+        SqliteTableBuilder stb = new SqliteTableBuilder();
     }
 }
