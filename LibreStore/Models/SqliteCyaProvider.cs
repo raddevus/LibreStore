@@ -5,40 +5,9 @@ public class SqliteCyaProvider : IPersistable{
     private SqliteConnection connection;
     public SqliteCommand command{get;set;}
     
-    private String [] allTableCreation = {
-               @"CREATE TABLE IF NOT EXISTS [CyaBucket]
-                (
-                    [ID] INTEGER NOT NULL PRIMARY KEY,
-                    [MainTokenId] INTEGER NOT NULL UNIQUE,
-                    [Data] NVARCHAR(40000) NOT NULL check(length(Data) <= 40000),
-                    [Hmac] NVARCHAR(64) NOT NULL check(length(Hmac) <= 64),
-                    [Iv] NVARCHAR(32) NOT NULL check(length(Iv) <= 32),
-                    [Created] NVARCHAR(30) default (datetime('now','localtime')) check(length(Created) <= 30),
-                    [Updated] NVARCHAR(30) check(length(Updated) <= 30),
-                    [Active] BOOLEAN default(1)
-                )"};
-
     public SqliteCyaProvider()
     {
-        try{
-                connection = new SqliteConnection("Data Source=librestore.db");
-                // ########### FYI THE DB is created when it is OPENED ########
-                connection.Open();
-                command = connection.CreateCommand();
-                FileInfo fi = new FileInfo("librestore.db");
-                if (fi.Length == 0){
-                    foreach (String tableCreate in allTableCreation){
-                        command.CommandText = tableCreate;
-                        command.ExecuteNonQuery();
-                    }
-                }
-                Console.WriteLine(connection.DataSource);
-        }
-        finally{
-            if (connection != null){
-                connection.Close();
-            }
-        }
+        connection = new SqliteConnection("Data Source=librestore.db");
     }
 
     public int GetOrInsert(){
