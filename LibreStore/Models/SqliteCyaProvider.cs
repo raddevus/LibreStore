@@ -8,6 +8,7 @@ public class SqliteCyaProvider : IPersistable{
     public SqliteCyaProvider()
     {
         connection = new SqliteConnection("Data Source=librestore.db");
+        command = connection.CreateCommand();
     }
 
     public int GetOrInsert(){

@@ -8,6 +8,7 @@ public class SqliteProvider : IPersistable{
     public SqliteProvider()
     {
         connection = new SqliteConnection("Data Source=librestore.db");
+        command = connection.CreateCommand();
     }
 
     public List<MainToken> GetAllTokens(){
