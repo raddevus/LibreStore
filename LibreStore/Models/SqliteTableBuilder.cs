@@ -6,7 +6,7 @@ public class SqliteTableBuilder{
     public SqliteCommand command{get;set;}
 
 
-    private String [] allTableCreation = {
+    private readonly String [] allTableCreation = {
                 @"CREATE TABLE IF NOT EXISTS [MainToken]
                 (
                     [ID] INTEGER NOT NULL PRIMARY KEY,
