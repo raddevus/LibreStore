@@ -73,6 +73,8 @@ public class DataController : Controller
 
     [HttpGet("GetData")]
     public ActionResult GetData(String key, Int64 bucketId){
+        
+        DbProvider dbProvider = new SqliteProvider("Data Source=librestore.db");
         SqliteProvider sp = new SqliteProvider();
         var mainTokenId = WriteUsage(sp,"GetData",key,false);
         sp = new SqliteProvider();

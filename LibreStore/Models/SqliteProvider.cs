@@ -1,13 +1,13 @@
 using Microsoft.Data.Sqlite;
 using LibreStore.Models;
-public class SqliteProvider : IPersistable{
+public class SqliteProvider : DbProvider{
 
     private SqliteConnection connection;
     public SqliteCommand command{get;set;}
         
-    public SqliteProvider()
+    public SqliteProvider( String connectionDetails = "Data Source=librestore.db") : base(DbType.Sqlite, connectionDetails)
     {
-        connection = new SqliteConnection("Data Source=librestore.db");
+        connection = new SqliteConnection(connectionDetails); //"Data Source=librestore.db"
         command = connection.CreateCommand();
     }
 
