@@ -71,11 +71,18 @@ public class DataController : Controller
         return new JsonResult(jsonResult);
     }
 
+    private string getIpAddress(){
+        return Request?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "0.0.0.0";
+    }
+
     [HttpGet("GetData")]
     public ActionResult GetData(String key, Int64 bucketId){
         
-        DbProvider dbProvider = new SqliteProvider("Data Source=librestore.db");
+        IDbProvider dbProvider = new SqliteProvider("Data Source=librestore.db");
+        dbProvider.WriteUsage("GetData", getIpAddress());
+        return new JsonResult(new {success="true", id=100});
         SqliteProvider sp = new SqliteProvider();
+        
         var mainTokenId = WriteUsage(sp,"GetData",key,false);
         sp = new SqliteProvider();
         Bucket b = new Bucket(bucketId,mainTokenId);

@@ -1,6 +1,6 @@
-public class DbProvider: IPersistable{
+public class DbProvider: IPersistable, IDbProvider{
     
-    public DbProvider dbProvider; 
+    public IDbProvider dbProvider; 
 
     public DbProvider(DbType dbType, String connectionDetails)
     {
@@ -15,7 +15,12 @@ public class DbProvider: IPersistable{
             }
         }
     }
-    
+
+    public long WriteUsage(string action, string ipAddress, string key = "", bool shouldInsert = true)
+    {
+        return dbProvider.WriteUsage(action,ipAddress,key,shouldInsert);
+    }
+
     long IPersistable.Save()
     {
         throw new NotImplementedException();

@@ -1,14 +1,33 @@
 using Microsoft.Data.Sqlite;
 using LibreStore.Models;
-public class SqliteProvider : DbProvider{
+public class SqliteProvider : IPersistable, IDbProvider{
 
     private SqliteConnection connection;
     public SqliteCommand command{get;set;}
         
-    public SqliteProvider( String connectionDetails = "Data Source=librestore.db") : base(DbType.Sqlite, connectionDetails)
+    public SqliteProvider( String connectionDetails = "Data Source=librestore.db")
     {
         connection = new SqliteConnection(connectionDetails); //"Data Source=librestore.db"
         command = connection.CreateCommand();
+    }
+
+     public Int64 WriteUsage(String action, String ipAddress, String key="", bool shouldInsert=true){
+        
+        MainTokenData mtd = new MainTokenData(this,new MainToken(key));
+        
+        if (shouldInsert){
+            mtd.ConfigureInsert();
+        }
+        else{
+            mtd.ConfigureSelect();
+        }
+        var mainTokenId = this.GetOrInsert();
+
+        Usage u = new Usage(mainTokenId,ipAddress,action);
+        UsageData ud = new UsageData(this,u);
+        ud.Configure();
+        this.Save();
+        return mainTokenId;
     }
 
     public List<MainToken> GetAllTokens(){
