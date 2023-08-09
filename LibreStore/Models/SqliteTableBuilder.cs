@@ -2,8 +2,8 @@ namespace LibreStore.Models;
 using Microsoft.Data.Sqlite;
 public class SqliteTableBuilder{
 
-    private SqliteConnection connection;
-    public SqliteCommand command{get;set;}
+    private readonly SqliteConnection connection;
+    public SqliteCommand Command{get;set;}
 
 
     private readonly String [] allTableCreation = {
@@ -68,22 +68,20 @@ public class SqliteTableBuilder{
             connection = new SqliteConnection("Data Source=librestore.db");
             // ########### FYI THE DB is created when it is OPENED ########
             connection.Open();
-            command = connection.CreateCommand();
+            Command = connection.CreateCommand();
             FileInfo fi = new FileInfo("librestore.db");
             if (fi.Length == 0){
                 //
                 Console.WriteLine("Adding all tables to librestore.db");
                 foreach (String tableCreate in allTableCreation){
-                    command.CommandText = tableCreate;
-                    command.ExecuteNonQuery();
+                    Command.CommandText = tableCreate;
+                    Command.ExecuteNonQuery();
                 }
             }
             Console.WriteLine(connection.DataSource);
         }
         finally{
-            if (connection != null){
-                connection.Close();
-            }
+            connection?.Close();
         }
     }
         
