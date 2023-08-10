@@ -53,14 +53,14 @@ public class DataController : Controller
     }
 
     private ActionResult InternalSaveData(String key, String data, String hmac, String iv, String? intent = null){
-        IDbProvider dbp = new SqliteProvider();
+        IDbProvider dbp = new DbProvider(DbType.Sqlite);
         var mainTokenId = dbp.WriteUsage("SaveData",GetIpAddress(),key);
         // if mainTokenId == 0 then an error occurred.
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't save data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
-        dbp = new SqliteProvider();
+        dbp = new DbProvider(DbType.Sqlite);
         Bucket b = new Bucket(mainTokenId,intent,data,hmac,iv);
         dbp.ConfigureBucket(b);
         
@@ -77,12 +77,12 @@ public class DataController : Controller
     [HttpGet("GetData")]
     public ActionResult GetData(String key, Int64 bucketId){
         
-        IDbProvider dbProvider = new SqliteProvider("Data Source=librestore.db");
+        IDbProvider dbProvider = new DbProvider(DbType.Sqlite);
         // When we call WriteUsage for GetData, we don't want to create a new MainToken
         // if it already doesn't exist, so we make last param = false
         dbProvider.WriteUsage("GetData", GetIpAddress(),key,false);
 
-        dbProvider = new SqliteProvider("Data Source=librestore.db");
+        dbProvider = new DbProvider(DbType.Sqlite);
         dbProvider.ConfigureBucketSelect(key, bucketId);
         // Bucket b = new Bucket(bucketId,mainTokenId);
         Bucket b = dbProvider.GetBucket();
@@ -95,14 +95,14 @@ public class DataController : Controller
 
     [HttpGet("GetBucketIds")]
     public ActionResult GetBucketIds(String key){
-        IDbProvider dbp = new SqliteProvider();
+        IDbProvider dbp = new DbProvider(DbType.Sqlite);
         var mainTokenId = dbp.WriteUsage("GetBucketIds",GetIpAddress(), key,false);
 
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve any data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
-        dbp = new SqliteProvider();
+        dbp = new DbProvider(DbType.Sqlite);
         dbp.ConfigureBucketIdSelect(mainTokenId);
         List<long> allBucketIds = dbp.GetAllBucketIds();
         if (allBucketIds.Count() == 0){

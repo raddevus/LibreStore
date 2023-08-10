@@ -4,10 +4,13 @@ public class DbProvider: IPersistable, IDbProvider{
     
     public IDbProvider dbProvider; 
 
-    public DbProvider(DbType dbType, String connectionDetails)
+    public DbProvider(DbType dbType, String connectionDetails = "")
     {
         switch (dbType){
             case DbType.Sqlite:{
+                if (connectionDetails == String.Empty){
+                    connectionDetails = "Data Source=librestore.db";
+                }
                 dbProvider = new SqliteProvider(connectionDetails);
                 break;
             }
