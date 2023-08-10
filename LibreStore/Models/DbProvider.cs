@@ -38,6 +38,14 @@ public class DbProvider: IPersistable, IDbProvider{
         return dbProvider.ConfigureBucketIdSelect(mainTokenId);
     }
 
+    public int ConfigureBucketDelete(long bucketId, long mainTokenId){
+        return dbProvider.ConfigureBucketDelete(bucketId, mainTokenId);
+    }
+
+    public Int32 DeleteBucket(){
+        return dbProvider.DeleteBucket();
+    }
+
     public List<long> GetAllBucketIds(){
         return dbProvider.GetAllBucketIds();
     }

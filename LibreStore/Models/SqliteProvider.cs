@@ -58,7 +58,17 @@ public class SqliteProvider : IPersistable, IDbProvider{
                     @"select Id from bucket where MainTokenId = $id";
         command.Parameters.AddWithValue("$id",mainTokenId);
         return 0;
-        
+    }
+
+    public int ConfigureBucketDelete(long bucketId, long mainTokenId){
+
+        command.CommandText =
+            @"delete from bucket
+                where mainTokenId = $tokenId
+                and id = $id";
+        command.Parameters.AddWithValue("$tokenId",mainTokenId);
+        command.Parameters.AddWithValue("$id", bucketId);
+        return 0;
     }
 
     public List<MainToken> GetAllTokens(){

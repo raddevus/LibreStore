@@ -129,18 +129,16 @@ public class DataController : Controller
     [HttpGet("DeleteData")]
     public ActionResult DeleteData(String key, long bucketId)
     {
-        SqliteProvider sp = new SqliteProvider();
-        var mainTokenId = WriteUsage(sp,"DeleteData",key,false);
+        IDbProvider dbp = new DbProvider(DbType.Sqlite);
+        var mainTokenId = dbp.WriteUsage("DeleteData",GetIpAddress(),key,false);
         if (mainTokenId == 0){
-            var jsonErrorResult = new {success=false,message="Couldn't retrieve Data because of invalid MainToken.Key. Data not deleted!"};
+            var jsonErrorResult = new {success=false,message="Couldn't delete Data because of invalid MainToken.Key. Data not deleted!"};
             return new JsonResult(jsonErrorResult);
         }
 
-        SqliteProvider scp = new SqliteProvider();
-        Bucket b = new Bucket(bucketId, mainTokenId);
-        BucketData bd = new BucketData(scp,b);
-        bd.ConfigureDelete(bucketId, mainTokenId);
-        var deletedCount = scp.DeleteBucket();
+        dbp = new DbProvider(DbType.Sqlite);
+        dbp.ConfigureBucketDelete(bucketId, mainTokenId);
+        var deletedCount = dbp.DeleteBucket();
         Object? jsonResult = null;
         if (deletedCount > 0){
             jsonResult = new {success=(deletedCount > -1),message="(Encrypted) data & all associated data has been deleted."};
