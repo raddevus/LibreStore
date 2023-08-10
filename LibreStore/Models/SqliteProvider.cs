@@ -52,6 +52,15 @@ public class SqliteProvider : IPersistable, IDbProvider{
         return 0;
     }
 
+    public int ConfigureBucketIdSelect(long mainTokenId){
+        
+        command.CommandText =
+                    @"select Id from bucket where MainTokenId = $id";
+        command.Parameters.AddWithValue("$id",mainTokenId);
+        return 0;
+        
+    }
+
     public List<MainToken> GetAllTokens(){
         command.CommandText = "Select * from MainToken";
         List<MainToken> allTokens = new List<MainToken>();

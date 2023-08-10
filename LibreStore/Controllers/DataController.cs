@@ -95,18 +95,16 @@ public class DataController : Controller
 
     [HttpGet("GetBucketIds")]
     public ActionResult GetBucketIds(String key){
-        SqliteProvider sp = new SqliteProvider();
-        var mainTokenId = WriteUsage(sp,"GetBucketIds",key,false);
+        IDbProvider dbp = new SqliteProvider();
+        var mainTokenId = dbp.WriteUsage("GetBucketIds",GetIpAddress(), key,false);
 
         if (mainTokenId == 0){
-            var jsonErrorResult = new {success=false,message="Couldn't save data because of invalid MainToken.Key."};
+            var jsonErrorResult = new {success=false,message="Couldn't retrieve any data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
-        sp = new SqliteProvider();
-        
-        BucketData bd = new BucketData(sp);
-        bd.ConfigureBucketIdSelect(mainTokenId);
-        List<long> allBucketIds = sp.GetAllBucketIds();
+        dbp = new SqliteProvider();
+        dbp.ConfigureBucketIdSelect(mainTokenId);
+        List<long> allBucketIds = dbp.GetAllBucketIds();
         if (allBucketIds.Count() == 0){
             return new JsonResult(new {success="false",message="No data available for that key."});
         }

@@ -12,7 +12,7 @@ public class DbProvider: IPersistable, IDbProvider{
                 break;
             }
             case DbType.SqlServer:{
-
+                dbProvider = new SqlServerProvider(connectionDetails);
                 break;
             }
         }
@@ -31,7 +31,14 @@ public class DbProvider: IPersistable, IDbProvider{
         return dbProvider.ConfigureBucketSelect(key, bucketId);
     }
 
-    
+    public int ConfigureBucketIdSelect(long mainTokenId){
+        return dbProvider.ConfigureBucketIdSelect(mainTokenId);
+    }
+
+    public List<long> GetAllBucketIds(){
+        return dbProvider.GetAllBucketIds();
+    }
+
      public Bucket GetBucket()
     {
         return dbProvider.GetBucket();
