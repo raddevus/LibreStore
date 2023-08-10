@@ -52,5 +52,9 @@ public class DbProvider: IPersistable, IDbProvider{
         return dbProvider.Save();
     }
 
+    public List<MainToken> GetAllTokens(){
+        return dbProvider.GetAllTokens();
+    }
+
    
 }

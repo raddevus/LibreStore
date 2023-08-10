@@ -114,18 +114,15 @@ public class DataController : Controller
     [HttpGet("GetAllTokens")]
     public ActionResult GetAllTokens(String pwd){
         List<MainToken> allTokens = new List<MainToken>();
-        SqliteProvider sp = new SqliteProvider();
+        IDbProvider dbp = new DbProvider(DbType.Sqlite);
         if (Hash(pwd) != "86BC2CA50432385C30E2FAC2923AA6D19F7304E213DAB1D967A8D063BEF50EE1"){
-            WriteUsage(sp,"GetAllTokens - rejected","",false);
+            dbp.WriteUsage("GetAllTokens - rejected",GetIpAddress(),"",false);
             return new JsonResult(new {result="false",message="couldn't authenticate request"});
         }
-        sp = new SqliteProvider();
-        allTokens = sp.GetAllTokens();
+        dbp.WriteUsage("GetAllTokens",GetIpAddress(),"",false);
+        dbp = new DbProvider(DbType.Sqlite);
+        allTokens = dbp.GetAllTokens();
 
-        sp = new SqliteProvider();
-        // just want to get IP Address of 
-        WriteUsage(sp,"GetAllTokens","",false);
-        
         return new JsonResult(allTokens);
     }
 
@@ -206,11 +203,5 @@ public class DataController : Controller
         var sha = SHA256.Create();
         byte[] hash = sha.ComputeHash(Encoding.ASCII.GetBytes(value)); 
         return String.Concat(Array.ConvertAll(hash, x => x.ToString("X2"))); 
-    }
-
-    // public IActionResult Index()
-    // {
-    //     return View();
-    // }
-   
+    }   
 }

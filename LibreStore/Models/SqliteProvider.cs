@@ -7,7 +7,7 @@ public class SqliteProvider : IPersistable, IDbProvider{
         
     public SqliteProvider( String connectionDetails = "Data Source=librestore.db")
     {
-        connection = new SqliteConnection(connectionDetails); //"Data Source=librestore.db"
+        connection = new SqliteConnection(connectionDetails);
         command = connection.CreateCommand();
     }
 
