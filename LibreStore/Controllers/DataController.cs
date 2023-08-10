@@ -53,25 +53,24 @@ public class DataController : Controller
     }
 
     private ActionResult InternalSaveData(String key, String data, String hmac, String iv, String? intent = null){
-        SqliteProvider sp = new SqliteProvider();
-        var mainTokenId = WriteUsage(sp,"SaveData",key);
+        IDbProvider dbp = new SqliteProvider();
+        var mainTokenId = dbp.WriteUsage("SaveData",GetIpAddress(),key);
         // if mainTokenId == 0 then an error occurred.
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't save data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
-        sp = new SqliteProvider();
+        dbp = new SqliteProvider();
         Bucket b = new Bucket(mainTokenId,intent,data,hmac,iv);
+        dbp.ConfigureBucket(b);
         
-        BucketData bd = new BucketData(sp,b);
-        bd.Configure();
-        var bucketId = sp.Save();
+        var bucketId = dbp.Save();
     
         var jsonResult = new {success=true,BucketId=bucketId};
         return new JsonResult(jsonResult);
     }
 
-    private string getIpAddress(){
+    private string GetIpAddress(){
         return Request?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "0.0.0.0";
     }
 
@@ -79,13 +78,14 @@ public class DataController : Controller
     public ActionResult GetData(String key, Int64 bucketId){
         
         IDbProvider dbProvider = new SqliteProvider("Data Source=librestore.db");
-        var mainTokenId = dbProvider.WriteUsage("GetData", getIpAddress());
-        
-        // var mainTokenId = WriteUsage(sp,"GetData",key,false);
+        // When we call WriteUsage for GetData, we don't want to create a new MainToken
+        // if it already doesn't exist, so we make last param = false
+        dbProvider.WriteUsage("GetData", GetIpAddress(),key,false);
+
         dbProvider = new SqliteProvider("Data Source=librestore.db");
         dbProvider.ConfigureBucketSelect(key, bucketId);
-        Bucket b = new Bucket(bucketId,mainTokenId);
-        b = dbProvider.GetBucket();
+        // Bucket b = new Bucket(bucketId,mainTokenId);
+        Bucket b = dbProvider.GetBucket();
 
         // if Bucket.Id is > 0 then a valid bucket was returned
         // otherwise there was not matching bucket (b.id == 0)

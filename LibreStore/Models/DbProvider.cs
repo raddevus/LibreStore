@@ -23,6 +23,10 @@ public class DbProvider: IPersistable, IDbProvider{
         return dbProvider.WriteUsage(action,ipAddress,key,shouldInsert);
     }
 
+    public int ConfigureBucket(Bucket bucket){
+        return dbProvider.ConfigureBucket(bucket);
+    }
+
     public int ConfigureBucketSelect(String key, Int64 bucketId){
         return dbProvider.ConfigureBucketSelect(key, bucketId);
     }
@@ -33,9 +37,9 @@ public class DbProvider: IPersistable, IDbProvider{
         return dbProvider.GetBucket();
     }
 
-    long IPersistable.Save()
+    public long Save()
     {
-        throw new NotImplementedException();
+        return dbProvider.Save();
     }
 
    

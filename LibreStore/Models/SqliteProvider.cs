@@ -30,14 +30,25 @@ public class SqliteProvider : IPersistable, IDbProvider{
         return mainTokenId;
     }
 
+    public int ConfigureBucket(Bucket bucket){
+        
+        command.CommandText = @"INSERT into Bucket (mainTokenId,intent,data,hmac,iv)values($mainTokenId,$intent,$data,$hmac,$iv);SELECT last_insert_rowid()";
+        command.Parameters.AddWithValue("$mainTokenId",bucket.MainTokenId);
+        command.Parameters.AddWithValue("$intent",(object)bucket.Intent ?? System.DBNull.Value);
+        command.Parameters.AddWithValue("$data",bucket.Data);
+        command.Parameters.AddWithValue("$hmac",bucket.Hmac);
+        command.Parameters.AddWithValue("$iv",bucket.Iv);
+        return 0;
+    }
+
     public int ConfigureBucketSelect(String key, Int64 bucketId){
        
-        this.command.CommandText = @"select b.* from MainToken as mt 
+        command.CommandText = @"select b.* from MainToken as mt 
                 join bucket as b on mt.id = b.mainTokenId 
                 where mt.Key=$key and b.Id = $id
                 and b.active = 1 and mt.active=1";
-        this.command.Parameters.AddWithValue("$key",key);
-        this.command.Parameters.AddWithValue("$id",bucketId);
+        command.Parameters.AddWithValue("$key",key);
+        command.Parameters.AddWithValue("$id",bucketId);
         return 0;
     }
 
