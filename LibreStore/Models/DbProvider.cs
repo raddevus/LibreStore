@@ -42,6 +42,14 @@ public class DbProvider: IPersistable, IDbProvider{
         return dbProvider.ConfigureBucketDelete(bucketId, mainTokenId);
     }
 
+    public int ConfigureOwnerInsert(String email){
+        return dbProvider.ConfigureOwnerInsert(email);
+    }
+
+    public int ConfigureUpdateOwner(MainToken mainToken){
+        return dbProvider.ConfigureUpdateOwner(mainToken);
+    }
+
     public Int32 DeleteBucket(){
         return dbProvider.DeleteBucket();
     }
@@ -62,6 +70,10 @@ public class DbProvider: IPersistable, IDbProvider{
 
     public List<MainToken> GetAllTokens(){
         return dbProvider.GetAllTokens();
+    }
+
+    public Int64 UpdateOwner(){
+        return dbProvider.UpdateOwner();
     }
 
    

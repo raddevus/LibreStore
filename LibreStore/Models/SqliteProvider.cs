@@ -12,7 +12,6 @@ public class SqliteProvider : IPersistable, IDbProvider{
     }
 
      public Int64 WriteUsage(String action, String ipAddress, String key="", bool shouldInsert=true){
-        
         MainTokenData mtd = new MainTokenData(this,new MainToken(key));
         
         if (shouldInsert){
@@ -31,7 +30,6 @@ public class SqliteProvider : IPersistable, IDbProvider{
     }
 
     public int ConfigureBucket(Bucket bucket){
-        
         command.CommandText = @"INSERT into Bucket (mainTokenId,intent,data,hmac,iv)values($mainTokenId,$intent,$data,$hmac,$iv);SELECT last_insert_rowid()";
         command.Parameters.AddWithValue("$mainTokenId",bucket.MainTokenId);
         command.Parameters.AddWithValue("$intent",(object)bucket.Intent ?? System.DBNull.Value);
@@ -42,7 +40,6 @@ public class SqliteProvider : IPersistable, IDbProvider{
     }
 
     public int ConfigureBucketSelect(String key, Int64 bucketId){
-       
         command.CommandText = @"select b.* from MainToken as mt 
                 join bucket as b on mt.id = b.mainTokenId 
                 where mt.Key=$key and b.Id = $id
@@ -53,7 +50,6 @@ public class SqliteProvider : IPersistable, IDbProvider{
     }
 
     public int ConfigureBucketIdSelect(long mainTokenId){
-        
         command.CommandText =
                     @"select Id from bucket where MainTokenId = $id";
         command.Parameters.AddWithValue("$id",mainTokenId);
@@ -61,13 +57,32 @@ public class SqliteProvider : IPersistable, IDbProvider{
     }
 
     public int ConfigureBucketDelete(long bucketId, long mainTokenId){
-
         command.CommandText =
             @"delete from bucket
                 where mainTokenId = $tokenId
                 and id = $id";
         command.Parameters.AddWithValue("$tokenId",mainTokenId);
         command.Parameters.AddWithValue("$id", bucketId);
+        return 0;
+    }
+
+    public int ConfigureOwnerInsert(String email){
+        command.CommandText = @"insert into Owner (email)  
+                select $email 
+                where not exists 
+                (select email from owner where email=$email);
+                    select id from owner where email=$email and active=1";
+        command.Parameters.AddWithValue("$email",email);
+        return 0; // success
+    }
+
+    public int ConfigureUpdateOwner(MainToken mainToken){
+        // 2023-06-01 Discovered the sqlite Returning clause -- Returns value(s) after update or insert.
+        // See https://www.sqlite.org/lang_returning.html
+        String sqlCommand = @"update maintoken set OwnerId = $ownerId where key = $key and active=1 Returning ID";
+        command.CommandText = sqlCommand;
+        command.Parameters.AddWithValue("$ownerId", mainToken.OwnerId);
+        command.Parameters.AddWithValue("$key", mainToken.Key);
         return 0;
     }
 

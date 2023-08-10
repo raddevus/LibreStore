@@ -151,22 +151,21 @@ public class DataController : Controller
 
     [HttpGet("AddOwner")]
     public ActionResult AddOwner(String key, String email){
-        SqliteProvider sp = new SqliteProvider();
-        var mainTokenId = WriteUsage(sp,"UpdateOwner",key,false);
+        IDbProvider dbp = new DbProvider(DbType.Sqlite);
+        var mainTokenId = dbp.WriteUsage("UpdateOwner",GetIpAddress(),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't add an owner because of invalid MainToken.Key. Please make sure you're using a valid MainToken Key!"};
             return new JsonResult(jsonErrorResult);
         }
-        SqliteProvider scp = new SqliteProvider();
+        dbp = new DbProvider(DbType.Sqlite);
         Owner o = new Owner(email);
-        OwnerData od = new OwnerData(scp,o);
-        od.ConfigureInsert();
-        o.ID = scp.Save();
+        dbp.ConfigureOwnerInsert(o.Email);
+        o.ID = dbp.Save();
         
-        MainTokenData mtd = new MainTokenData(scp,new MainToken(key,o.ID));
-        mtd.ConfigureUpdateOwner();
+        
+        dbp.ConfigureUpdateOwner(new MainToken(key,o.ID));
         Object? jsonResult = null;
-         if (scp.UpdateOwner() == 0){
+         if (dbp.UpdateOwner() == 0){
             jsonResult = new {success=false,message="Couldn't update the Owner for that MainToken Key. Please try again."};            
          }
          else{
