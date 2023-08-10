@@ -79,16 +79,13 @@ public class DataController : Controller
     public ActionResult GetData(String key, Int64 bucketId){
         
         IDbProvider dbProvider = new SqliteProvider("Data Source=librestore.db");
-        dbProvider.WriteUsage("GetData", getIpAddress());
-        return new JsonResult(new {success="true", id=100});
-        SqliteProvider sp = new SqliteProvider();
+        var mainTokenId = dbProvider.WriteUsage("GetData", getIpAddress());
         
-        var mainTokenId = WriteUsage(sp,"GetData",key,false);
-        sp = new SqliteProvider();
+        // var mainTokenId = WriteUsage(sp,"GetData",key,false);
+        dbProvider = new SqliteProvider("Data Source=librestore.db");
+        dbProvider.ConfigureBucketSelect(key, bucketId);
         Bucket b = new Bucket(bucketId,mainTokenId);
-        BucketData bd = new BucketData(sp,b);
-        bd.ConfigureSelect(key);
-        b = sp.GetBucket();
+        b = dbProvider.GetBucket();
 
         // if Bucket.Id is > 0 then a valid bucket was returned
         // otherwise there was not matching bucket (b.id == 0)

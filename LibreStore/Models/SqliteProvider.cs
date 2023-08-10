@@ -30,6 +30,17 @@ public class SqliteProvider : IPersistable, IDbProvider{
         return mainTokenId;
     }
 
+    public int ConfigureBucketSelect(String key, Int64 bucketId){
+       
+        this.command.CommandText = @"select b.* from MainToken as mt 
+                join bucket as b on mt.id = b.mainTokenId 
+                where mt.Key=$key and b.Id = $id
+                and b.active = 1 and mt.active=1";
+        this.command.Parameters.AddWithValue("$key",key);
+        this.command.Parameters.AddWithValue("$id",bucketId);
+        return 0;
+    }
+
     public List<MainToken> GetAllTokens(){
         command.CommandText = "Select * from MainToken";
         List<MainToken> allTokens = new List<MainToken>();
