@@ -5,6 +5,8 @@ public interface IDbProvider{
     int ConfigureBucketSelect(String key, Int64 bucketId);
     int ConfigureBucketIdSelect(long mainTokenId);
     int ConfigureBucketDelete(long bucketId, long mainTokenId);
+    int ConfigureMainTokenInsert(String mtKey);
+    int ConfigureMainTokenSelect(String mtKey);
     int ConfigureOwnerInsert(String email);
     int ConfigureUpdateOwner(MainToken mainToken);
     Int32 DeleteBucket();

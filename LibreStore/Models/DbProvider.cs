@@ -42,6 +42,13 @@ public class DbProvider: IPersistable, IDbProvider{
         return dbProvider.ConfigureBucketDelete(bucketId, mainTokenId);
     }
 
+    public int ConfigureMainTokenInsert(String mtKey){
+        return dbProvider.ConfigureMainTokenInsert(mtKey);
+    }
+    public int ConfigureMainTokenSelect(String mtKey){
+        return dbProvider.ConfigureMainTokenSelect(mtKey);
+    }
+
     public int ConfigureOwnerInsert(String email){
         return dbProvider.ConfigureOwnerInsert(email);
     }

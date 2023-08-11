@@ -12,13 +12,11 @@ public class SqliteProvider : IPersistable, IDbProvider{
     }
 
      public Int64 WriteUsage(String action, String ipAddress, String key="", bool shouldInsert=true){
-        MainTokenData mtd = new MainTokenData(this,new MainToken(key));
-        
         if (shouldInsert){
-            mtd.ConfigureInsert();
+            ConfigureMainTokenInsert(key);
         }
         else{
-            mtd.ConfigureSelect();
+            ConfigureMainTokenSelect(key);
         }
         var mainTokenId = this.GetOrInsert();
 
@@ -63,6 +61,27 @@ public class SqliteProvider : IPersistable, IDbProvider{
                 and id = $id";
         command.Parameters.AddWithValue("$tokenId",mainTokenId);
         command.Parameters.AddWithValue("$id", bucketId);
+        return 0;
+    }
+
+    public int ConfigureMainTokenInsert(String mtKey){
+        String sqlCommand = @"insert into maintoken (key)  
+                select $key 
+                where not exists 
+                (select key from maintoken where key=$key);
+                    select id from maintoken where key=$key and active=1";
+        
+        command.CommandText = sqlCommand;
+        command.Parameters.AddWithValue("$key",mtKey);
+        return 0;
+    }
+
+    public int ConfigureMainTokenSelect(String mtKey){
+        String sqlCommand = @"select id from maintoken
+                where key = $key and active=1";
+        
+        command.CommandText = sqlCommand;
+        command.Parameters.AddWithValue("$key",mtKey);
         return 0;
     }
 

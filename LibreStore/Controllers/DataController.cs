@@ -16,25 +16,6 @@ public class DataController : Controller
         _logger = logger;
     }
 
-    [HttpGet("SaveToken")]
-    public ActionResult SaveToken(String key){
-
-        MainToken mt = new MainToken(key);
-        
-        SqliteProvider sp = new SqliteProvider();
-        WriteUsage(sp,"SaveToken",key);
-
-        // Had to new up the SqliteProvider to insure it was initialized properly
-        // for use with MainTokenData
-        sp = new SqliteProvider();
-        MainTokenData mtd = new MainTokenData(sp,mt);
-        mtd.Configure();
-        sp.Save();
-        
-        var jsonResult = new {success=true};
-        return new JsonResult(jsonResult);
-    }
-
     [HttpGet("SaveData")]
     public ActionResult SaveData(String key, String data, String hmac, String iv, String? intent = null)
     {
@@ -173,26 +154,6 @@ public class DataController : Controller
          }
          return new JsonResult(jsonResult);
 
-    }
-
-    private Int64 WriteUsage(SqliteProvider sp, String action, String key="", bool shouldInsert=true){
-        var ipAddress = Request?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "0.0.0.0";
-        
-        MainTokenData mtd = new MainTokenData(sp,new MainToken(key));
-        
-        if (shouldInsert){
-            mtd.ConfigureInsert();
-        }
-        else{
-            mtd.ConfigureSelect();
-        }
-        var mainTokenId = sp.GetOrInsert();
-
-        Usage u = new Usage(mainTokenId,ipAddress,action);
-        UsageData ud = new UsageData(sp,u);
-        ud.Configure();
-        sp.Save();
-        return mainTokenId;
     }
 
     static public string Hash(string value) 
