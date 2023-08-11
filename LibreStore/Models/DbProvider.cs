@@ -53,6 +53,10 @@ public class DbProvider: IPersistable, IDbProvider{
         return dbProvider.ConfigureOwnerInsert(email);
     }
 
+    public int ConfigureUsage(Usage u){
+        return dbProvider.ConfigureUsage(u);
+    }
+
     public int ConfigureUpdateOwner(MainToken mainToken){
         return dbProvider.ConfigureUpdateOwner(mainToken);
     }

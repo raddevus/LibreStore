@@ -21,8 +21,7 @@ public class SqliteProvider : IPersistable, IDbProvider{
         var mainTokenId = this.GetOrInsert();
 
         Usage u = new Usage(mainTokenId,ipAddress,action);
-        UsageData ud = new UsageData(this,u);
-        ud.Configure();
+        ConfigureUsage(u);
         this.Save();
         return mainTokenId;
     }
@@ -93,6 +92,15 @@ public class SqliteProvider : IPersistable, IDbProvider{
                     select id from owner where email=$email and active=1";
         command.Parameters.AddWithValue("$email",email);
         return 0; // success
+    }
+
+    public int ConfigureUsage(Usage usage){
+        command.CommandText = @"INSERT into Usage (maintokenid,ipaddress,action)values($mainTokenId,$ipaddress,$action)";
+        // Console.WriteLine($"usage.MainTokenId: {usage.MainTokenId}");
+        command.Parameters.AddWithValue("$mainTokenId",usage.MainTokenId);
+        command.Parameters.AddWithValue("$ipaddress",usage.IpAddress);
+        command.Parameters.AddWithValue("$action", usage.Action);
+        return 0;
     }
 
     public int ConfigureUpdateOwner(MainToken mainToken){

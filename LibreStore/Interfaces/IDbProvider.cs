@@ -8,6 +8,7 @@ public interface IDbProvider{
     int ConfigureMainTokenInsert(String mtKey);
     int ConfigureMainTokenSelect(String mtKey);
     int ConfigureOwnerInsert(String email);
+    int ConfigureUsage(Usage u);
     int ConfigureUpdateOwner(MainToken mainToken);
     Int32 DeleteBucket();
     List<long> GetAllBucketIds();
