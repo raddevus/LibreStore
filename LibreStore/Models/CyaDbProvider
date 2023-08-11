@@ -1,0 +1,23 @@
+using LibreStore.Models;
+
+public class CyaDbProvider: ICyaDbProvider{
+    
+    public ICyaDbProvider dbProvider; 
+
+    public CyaDbProvider(DbType dbType, String connectionDetails = "")
+    {
+        switch (dbType){
+            case DbType.Sqlite:{
+                if (connectionDetails == String.Empty){
+                    connectionDetails = "Data Source=librestore.db";
+                }
+                dbProvider = new SqliteCyaProvider(connectionDetails);
+                break;
+            }
+            case DbType.SqlServer:{
+                dbProvider = new SqlServerCyaProvider(connectionDetails);
+                break;
+            }
+        }
+    }
+}

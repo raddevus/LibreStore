@@ -6,9 +6,5 @@ public class SqlServerProvider : DbProvider
     {
         
     }
-    long Save()
-    {
-        throw new NotImplementedException();
-
-    }
+    
 }

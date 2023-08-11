@@ -1,40 +1,6 @@
 using Microsoft.Data.Sqlite;
 using LibreStore.Models;
-public class SqliteCyaProvider : IPersistable{
-
-    private SqliteConnection connection;
-    public SqliteCommand command{get;set;}
-    
-    public SqliteCyaProvider()
-    {
-        connection = new SqliteConnection("Data Source=librestore.db");
-        command = connection.CreateCommand();
-    }
-
-    public int GetOrInsert(){
-        try{
-            Console.WriteLine("GetOrInsert...");
-            connection.Open();
-            Console.WriteLine("Opening...");
-            using (var reader = command.ExecuteReader())
-            {
-                reader.Read();
-                var id = reader.GetInt32(0);
-                Console.WriteLine($"GetOrInsert() id: {id}");
-                reader.Close();
-                return id;
-            }
-        }
-        catch(Exception ex){
-            Console.WriteLine($"Error: {ex.Message}");
-            return 0;
-        }
-        finally{
-            if (connection != null){
-                connection.Close();
-            }
-        }
-    }
+public class SqliteCyaProvider : SqliteProvider, ICyaDbProvider{
 
     public Cya GetCyaBucket(){
         try{
@@ -89,28 +55,6 @@ public class SqliteCyaProvider : IPersistable{
         catch(Exception ex){
             Console.WriteLine($"Error on delete: {ex.Message}");
             return -1;
-        }
-        finally{
-            if (connection != null){
-                connection.Close();
-            }
-        }
-    }
-
-    public Int64 Save(){
-        
-        try{
-            Console.WriteLine("Saving...");
-            connection.Open();
-            Console.WriteLine("Opened.");
-            // id should be last id inserted into table
-            var id = Convert.ToInt64(command.ExecuteScalar());
-            Console.WriteLine("inserted.");
-            return id;
-        }
-        catch(Exception ex){
-            Console.WriteLine($"Error: {ex.Message}");
-            return 0;
         }
         finally{
             if (connection != null){

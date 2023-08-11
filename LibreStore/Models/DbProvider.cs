@@ -1,6 +1,6 @@
 using LibreStore.Models;
 
-public class DbProvider: IPersistable, IDbProvider{
+public class DbProvider: IDbProvider{
     
     public IDbProvider dbProvider; 
 
