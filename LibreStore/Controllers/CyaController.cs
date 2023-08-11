@@ -47,10 +47,10 @@ public class CyaController : Controller
             return new JsonResult(jsonErrorResult);    
         }
         
-        SqliteCyaProvider scp = new SqliteCyaProvider();
+        ICyaDbProvider scp = new CyaDbProvider(DbType.Sqlite);
         Cya c = new Cya(mainTokenId);
-        CyaData cd = new CyaData(scp,c);
-        cd.ConfigureSelect(mainTokenId);
+       
+        scp.ConfigureSelect(mainTokenId);
         c = scp.GetCyaBucket();
 
         // if Bucket.Id is > 0 then a valid bucket was returned
