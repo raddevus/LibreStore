@@ -74,11 +74,11 @@ public class CyaController : Controller
         scp.ConfigureDelete(mainTokenId);
         var deletedCount = scp.DeleteCyaBucket();
         Object? jsonResult = null;
-        if (deletedCount > -1){
-            jsonResult = new {success=(deletedCount > -1),message="Encrypted data & all associated data has been deleted."};
+        if (deletedCount > 0){
+            jsonResult = new {success=(deletedCount > 0),message="Encrypted data & all associated data has been deleted."};
         }
         else{
-            jsonResult = new {success=(deletedCount > -1),message="Data does not exist for associated Cya Secret ID (MainToken). No data deleted."};
+            jsonResult = new {success=(deletedCount > 0),message="Data does not exist for associated Cya Secret ID (MainToken). No data deleted."};
         }
         return new JsonResult(jsonResult);
     }
