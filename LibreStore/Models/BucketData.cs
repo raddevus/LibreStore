@@ -18,7 +18,7 @@ public class BucketData{
     public int Configure(){
         if (dataPersistor != null)
         {
-            SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+            SqliteDataProvider sqliteProvider = dataPersistor as SqliteDataProvider;
             
             sqliteProvider.command.CommandText = @"INSERT into Bucket (mainTokenId,intent,data,hmac,iv)values($mainTokenId,$intent,$data,$hmac,$iv);SELECT last_insert_rowid()";
             sqliteProvider.command.Parameters.AddWithValue("$mainTokenId",bucket.MainTokenId);
@@ -34,7 +34,7 @@ public class BucketData{
     public int ConfigureSelect(String key){
         if (dataPersistor != null)
         {
-            SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+            SqliteDataProvider sqliteProvider = dataPersistor as SqliteDataProvider;
             sqliteProvider.command.CommandText = @"select b.* from MainToken as mt 
                     join bucket as b on mt.id = b.mainTokenId 
                     where mt.Key=$key and b.Id = $id
@@ -49,7 +49,7 @@ public class BucketData{
     public int ConfigureBucketIdSelect(long mainTokenId){
         if (dataPersistor != null)
         {
-            SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+            SqliteDataProvider sqliteProvider = dataPersistor as SqliteDataProvider;
             sqliteProvider.command.CommandText =
                      @"select Id from bucket where MainTokenId = $id";
             sqliteProvider.command.Parameters.AddWithValue("$id",mainTokenId);
@@ -61,7 +61,7 @@ public class BucketData{
     public int ConfigureDelete(long bucketId, long mainTokenId){
         if (dataPersistor != null)
         {
-            SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+            SqliteDataProvider sqliteProvider = dataPersistor as SqliteDataProvider;
             sqliteProvider.command.CommandText =
                 @"delete from bucket
                     where mainTokenId = $tokenId

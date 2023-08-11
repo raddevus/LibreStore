@@ -14,7 +14,7 @@ public class MainTokenData{
     public int Configure(){
         if (dataPersistor != null)
         {
-            SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+            SqliteDataProvider sqliteProvider = dataPersistor as SqliteDataProvider;
             
             sqliteProvider.command.CommandText = @"INSERT into MainToken (key)values($key)";
             sqliteProvider.command.Parameters.AddWithValue("$key",mainToken.Key);
@@ -26,7 +26,7 @@ public class MainTokenData{
     public int ConfigureInsert(){
         if (dataPersistor != null)
         {
-            SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+            SqliteDataProvider sqliteProvider = dataPersistor as SqliteDataProvider;
             String sqlCommand = @"insert into maintoken (key)  
                     select $key 
                     where not exists 
@@ -42,7 +42,7 @@ public class MainTokenData{
     }
 
     public int ConfigureSelect(){
-        SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+        SqliteDataProvider sqliteProvider = dataPersistor as SqliteDataProvider;
         String sqlCommand = @"select id from maintoken
                 where key = $key and active=1";
         
@@ -52,7 +52,7 @@ public class MainTokenData{
     }
 
     public int ConfigureUpdateOwner(){
-        SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+        SqliteDataProvider sqliteProvider = dataPersistor as SqliteDataProvider;
         // 2023-06-01 Discovered the sqlite Returning clause -- Returns value(s) after update or insert.
         // See https://www.sqlite.org/lang_returning.html
         String sqlCommand = @"update maintoken set OwnerId = $ownerId where key = $key and active=1 Returning ID";        

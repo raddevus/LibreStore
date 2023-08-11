@@ -19,7 +19,7 @@ public class OwnerData{
     public int ConfigureInsert(){
         if (dataPersistor != null)
         {
-            SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+            SqliteDataProvider sqliteProvider = dataPersistor as SqliteDataProvider;
                         
             sqliteProvider.command.CommandText = @"insert into Owner (email)  
                     select $email 

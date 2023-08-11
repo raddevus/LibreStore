@@ -11,7 +11,7 @@ public class DbProvider: IPersistable, IDbProvider{
                 if (connectionDetails == String.Empty){
                     connectionDetails = "Data Source=librestore.db";
                 }
-                dbProvider = new SqliteProvider(connectionDetails);
+                dbProvider = new SqliteDataProvider(connectionDetails);
                 break;
             }
             case DbType.SqlServer:{

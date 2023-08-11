@@ -14,7 +14,7 @@ public class UsageData{
     public int Configure(){
         if (dataPersistor != null)
         {
-            SqliteProvider sqliteProvider = dataPersistor as SqliteProvider;
+            SqliteDataProvider sqliteProvider = dataPersistor as SqliteDataProvider;
             
             sqliteProvider.command.CommandText = @"INSERT into Usage (maintokenid,ipaddress,action)values($mainTokenId,$ipaddress,$action)";
             // Console.WriteLine($"usage.MainTokenId: {usage.MainTokenId}");
