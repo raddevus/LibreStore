@@ -28,10 +28,9 @@ public class CyaController : Controller
             var jsonErrorResult = new {success=false,message="Couldn't save Cya data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
-        SqliteCyaProvider scp = new SqliteCyaProvider();
+        ICyaDbProvider scp = new CyaDbProvider(DbType.Sqlite);
         Cya c = new Cya(mainTokenId,data,hmac,iv);
-        CyaData cd = new CyaData(scp,c);
-        cd.Configure();
+        scp.Configure(c);
         var cyaId = scp.Save();
     
         var jsonResult = new {success=true,CyaId=cyaId};
@@ -69,10 +68,10 @@ public class CyaController : Controller
             return new JsonResult(jsonErrorResult);    
         }
 
-        SqliteCyaProvider scp = new SqliteCyaProvider();
+        ICyaDbProvider scp = new CyaDbProvider(DbType.Sqlite);
         Cya c = new Cya(mainTokenId);
-        CyaData cd = new CyaData(scp,c);
-        cd.ConfigureDelete(mainTokenId);
+
+        scp.ConfigureDelete(mainTokenId);
         var deletedCount = scp.DeleteCyaBucket();
         Object? jsonResult = null;
         if (deletedCount > -1){

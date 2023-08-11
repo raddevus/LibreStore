@@ -1,4 +1,4 @@
-public class SqlServerCyaProvider : DbProvider
+public class SqlServerCyaProvider : CyaDbProvider
 {
     //private  connection;
     // public SqliteCommand command{get;set;}

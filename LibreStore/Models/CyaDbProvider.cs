@@ -21,5 +21,32 @@ public class CyaDbProvider: ICyaDbProvider{
         }
     }
 
-    
+    public int Configure(Cya cya)
+    {
+        return dbProvider.Configure(cya);
+    }
+
+    public int ConfigureDelete(long mainTokenId){
+        return dbProvider.ConfigureDelete(mainTokenId);
+    }
+
+    public int ConfigureSelect(long mainTokenId)
+    {
+        return dbProvider.ConfigureSelect(mainTokenId);
+    }
+
+    public int DeleteCyaBucket()
+    {
+        return dbProvider.DeleteCyaBucket();
+    }
+
+    public Cya GetCyaBucket()
+    {
+        return dbProvider.GetCyaBucket();
+    }
+
+    public long Save()
+    {
+        return dbProvider.Save();
+    }
 }
