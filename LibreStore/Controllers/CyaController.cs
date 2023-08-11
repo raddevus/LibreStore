@@ -21,8 +21,8 @@ public class CyaController : Controller
             [FromForm] String data,
             [FromForm] String hmac,
             [FromForm] String iv){
-        SqliteProvider sp = new SqliteProvider();
-        var mainTokenId = WriteUsage(sp,"SaveCyaData",key);
+        IDbProvider dbp = new DbProvider(DbType.Sqlite);
+        var mainTokenId = dbp.WriteUsage("SaveCyaData",GetIpAddress(),key);
         // if mainTokenId == 0 then an error occurred.
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't save Cya data because of invalid MainToken.Key."};
@@ -40,8 +40,8 @@ public class CyaController : Controller
 
     [HttpGet("GetData")]
     public ActionResult GetData(String key){
-        SqliteProvider sp = new SqliteProvider();
-        var mainTokenId = WriteUsage(sp,"GetCyaData",key,false);
+        IDbProvider dbp = new DbProvider(DbType.Sqlite);
+        var mainTokenId = dbp.WriteUsage("GetCyaData",GetIpAddress(),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve Cya data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
@@ -62,8 +62,8 @@ public class CyaController : Controller
     [HttpGet("DeleteData")]
     public ActionResult DeleteData(String key)
     {
-        SqliteProvider sp = new SqliteProvider();
-        var mainTokenId = WriteUsage(sp,"DeleteCyaData",key,false);
+        IDbProvider dbp = new DbProvider(DbType.Sqlite);
+        var mainTokenId = dbp.WriteUsage("DeleteCyaData",GetIpAddress(),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve Cya data because of invalid MainToken.Key. Data not deleted!"};
             return new JsonResult(jsonErrorResult);    
@@ -84,24 +84,8 @@ public class CyaController : Controller
         return new JsonResult(jsonResult);
     }
 
-    private Int64 WriteUsage(SqliteProvider sp, String action, String key="", bool shouldInsert=true){
-        var ipAddress = Request?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "0.0.0.0";
-        
-        MainTokenData mtd = new MainTokenData(sp,new MainToken(key));
-        
-        if (shouldInsert){
-            mtd.ConfigureInsert();
-        }
-        else{
-            mtd.ConfigureSelect();
-        }
-        var mainTokenId = sp.GetOrInsert();
-
-        Usage u = new Usage(mainTokenId,ipAddress,action);
-        UsageData ud = new UsageData(sp,u);
-        ud.Configure();
-        sp.Save();
-        return mainTokenId;
+    private string GetIpAddress(){
+        return Request?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "0.0.0.0";
     }
 
     public string Hash(string value) 

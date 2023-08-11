@@ -1,6 +1,6 @@
 using Microsoft.Data.Sqlite;
 using LibreStore.Models;
-public class SqliteProvider : IPersistable, IDbProvider{
+public class SqliteProvider : IDbProvider{
 
     private SqliteConnection connection;
     public SqliteCommand command{get;set;}
