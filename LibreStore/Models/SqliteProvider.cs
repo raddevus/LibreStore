@@ -82,6 +82,26 @@ public class SqliteProvider {
         }
     }
 
+    public Int32 DeleteBucket(){
+        try{
+            Console.WriteLine("DeleteBucket...");
+            connection.Open();
+            Console.WriteLine("Opening...");
+            // returns number of records deleted
+            return command.ExecuteNonQuery();
+            
+        }
+        catch(Exception ex){
+            Console.WriteLine($"Error on delete: {ex.Message}");
+            return -1;
+        }
+        finally{
+            if (connection != null){
+                connection.Close();
+            }
+        }
+    }
+
     public Int64 Save(){
         
         try{

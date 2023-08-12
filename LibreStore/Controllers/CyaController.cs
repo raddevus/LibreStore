@@ -72,7 +72,7 @@ public class CyaController : Controller
         Cya c = new Cya(mainTokenId);
 
         dbp.ConfigureDelete(mainTokenId);
-        var deletedCount = dbp.DeleteCyaBucket();
+        var deletedCount = dbp.DeleteBucket();
         Object? jsonResult = null;
         if (deletedCount > 0){
             jsonResult = new {success=(deletedCount > 0),message="Encrypted data & all associated data has been deleted."};

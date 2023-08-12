@@ -166,27 +166,6 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
             }
         }
     }
-
-    public Int32 DeleteBucket(){
-        try{
-            Console.WriteLine("DeleteCyaBucket...");
-            connection.Open();
-            Console.WriteLine("Opening...");
-            // returns number of records deleted
-            return command.ExecuteNonQuery();
-            
-        }
-        catch(Exception ex){
-            Console.WriteLine($"Error on delete: {ex.Message}");
-            return -1;
-        }
-        finally{
-            if (connection != null){
-                connection.Close();
-            }
-        }
-    }
-
     public Int64 UpdateOwner(){
         try{
             Console.WriteLine("Updating OwnerId...");

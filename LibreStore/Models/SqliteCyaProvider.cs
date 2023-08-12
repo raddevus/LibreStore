@@ -70,24 +70,4 @@ public int ConfigureDelete(long mainTokenId){
             }
         }
     }
-
-    public Int32 DeleteCyaBucket(){
-        try{
-            Console.WriteLine("DeleteCyaBucket...");
-            connection.Open();
-            Console.WriteLine("Opening...");
-            // returns number of records deleted
-            return command.ExecuteNonQuery();
-            
-        }
-        catch(Exception ex){
-            Console.WriteLine($"Error on delete: {ex.Message}");
-            return -1;
-        }
-        finally{
-            if (connection != null){
-                connection.Close();
-            }
-        }
-    }
 }

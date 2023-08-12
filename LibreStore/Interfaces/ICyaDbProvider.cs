@@ -4,5 +4,5 @@ public interface ICyaDbProvider: IDbProvider{
     int ConfigureDelete(long mainTokenId);
     int ConfigureSelect(long mainTokenId);
     Cya GetCyaBucket();
-    Int32 DeleteCyaBucket();
+    Int32 DeleteBucket();
 }
