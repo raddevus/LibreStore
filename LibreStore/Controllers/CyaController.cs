@@ -21,7 +21,7 @@ public class CyaController : Controller
             [FromForm] String data,
             [FromForm] String hmac,
             [FromForm] String iv){
-        IDbProvider dbp = new DbProvider(DbType.Sqlite);
+        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
         var mainTokenId = dbp.WriteUsage("SaveCyaData",GetIpAddress(),key);
         // if mainTokenId == 0 then an error occurred.
         if (mainTokenId == 0){
@@ -39,7 +39,7 @@ public class CyaController : Controller
 
     [HttpGet("GetData")]
     public ActionResult GetData(String key){
-        IDbProvider dbp = new DbProvider(DbType.Sqlite);
+        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
         var mainTokenId = dbp.WriteUsage("GetCyaData",GetIpAddress(),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve Cya data because of invalid MainToken.Key."};
@@ -61,7 +61,7 @@ public class CyaController : Controller
     [HttpGet("DeleteData")]
     public ActionResult DeleteData(String key)
     {
-        IDbProvider dbp = new DbProvider(DbType.Sqlite);
+        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
         var mainTokenId = dbp.WriteUsage("DeleteCyaData",GetIpAddress(),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve Cya data because of invalid MainToken.Key. Data not deleted!"};

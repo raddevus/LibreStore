@@ -1,6 +1,6 @@
 using Microsoft.Data.Sqlite;
 using LibreStore.Models;
-public class SqliteDataProvider : SqliteProvider, IDbProvider{
+public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
 
     public SqliteDataProvider(String connectionDetails): base(connectionDetails)
     {

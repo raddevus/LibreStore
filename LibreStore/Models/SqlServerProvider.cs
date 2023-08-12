@@ -1,4 +1,4 @@
-public class SqlServerProvider : DbProvider
+public class SqlServerProvider : DataDbProvider
 {
     //private  connection;
     // public SqliteCommand command{get;set;}

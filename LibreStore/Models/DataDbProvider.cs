@@ -1,10 +1,10 @@
 using LibreStore.Models;
 
-public class DbProvider: IDbProvider{
+public class DataDbProvider: IDataDbProvider{
     
-    public IDbProvider dbProvider; 
+    public IDataDbProvider dbProvider; 
 
-    public DbProvider(DbType dbType, String connectionDetails = "")
+    public DataDbProvider(DbType dbType, String connectionDetails = "")
     {
         switch (dbType){
             case DbType.Sqlite:{

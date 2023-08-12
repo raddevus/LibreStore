@@ -34,14 +34,14 @@ public class DataController : Controller
     }
 
     private ActionResult InternalSaveData(String key, String data, String hmac, String iv, String? intent = null){
-        IDbProvider dbp = new DbProvider(DbType.Sqlite);
+        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
         var mainTokenId = dbp.WriteUsage("SaveData",GetIpAddress(),key);
         // if mainTokenId == 0 then an error occurred.
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't save data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
-        dbp = new DbProvider(DbType.Sqlite);
+        dbp = new DataDbProvider(DbType.Sqlite);
         Bucket b = new Bucket(mainTokenId,intent,data,hmac,iv);
         dbp.ConfigureBucket(b);
         
@@ -58,12 +58,12 @@ public class DataController : Controller
     [HttpGet("GetData")]
     public ActionResult GetData(String key, Int64 bucketId){
         
-        IDbProvider dbProvider = new DbProvider(DbType.Sqlite);
+        IDataDbProvider dbProvider = new DataDbProvider(DbType.Sqlite);
         // When we call WriteUsage for GetData, we don't want to create a new MainToken
         // if it already doesn't exist, so we make last param = false
         dbProvider.WriteUsage("GetData", GetIpAddress(),key,false);
 
-        dbProvider = new DbProvider(DbType.Sqlite);
+        dbProvider = new DataDbProvider(DbType.Sqlite);
         dbProvider.ConfigureBucketSelect(key, bucketId);
         // Bucket b = new Bucket(bucketId,mainTokenId);
         Bucket b = dbProvider.GetBucket();
@@ -76,14 +76,14 @@ public class DataController : Controller
 
     [HttpGet("GetBucketIds")]
     public ActionResult GetBucketIds(String key){
-        IDbProvider dbp = new DbProvider(DbType.Sqlite);
+        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
         var mainTokenId = dbp.WriteUsage("GetBucketIds",GetIpAddress(), key,false);
 
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve any data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
-        dbp = new DbProvider(DbType.Sqlite);
+        dbp = new DataDbProvider(DbType.Sqlite);
         dbp.ConfigureBucketIdSelect(mainTokenId);
         List<long> allBucketIds = dbp.GetAllBucketIds();
         if (allBucketIds.Count() == 0){
@@ -95,13 +95,13 @@ public class DataController : Controller
     [HttpGet("GetAllTokens")]
     public ActionResult GetAllTokens(String pwd){
         List<MainToken> allTokens = new List<MainToken>();
-        IDbProvider dbp = new DbProvider(DbType.Sqlite);
+        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
         if (Hash(pwd) != "86BC2CA50432385C30E2FAC2923AA6D19F7304E213DAB1D967A8D063BEF50EE1"){
             dbp.WriteUsage("GetAllTokens - rejected",GetIpAddress(),"",false);
             return new JsonResult(new {result="false",message="couldn't authenticate request"});
         }
         dbp.WriteUsage("GetAllTokens",GetIpAddress(),"",false);
-        dbp = new DbProvider(DbType.Sqlite);
+        dbp = new DataDbProvider(DbType.Sqlite);
         allTokens = dbp.GetAllTokens();
 
         return new JsonResult(allTokens);
@@ -110,14 +110,14 @@ public class DataController : Controller
     [HttpGet("DeleteData")]
     public ActionResult DeleteData(String key, long bucketId)
     {
-        IDbProvider dbp = new DbProvider(DbType.Sqlite);
+        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
         var mainTokenId = dbp.WriteUsage("DeleteData",GetIpAddress(),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't delete Data because of invalid MainToken.Key. Data not deleted!"};
             return new JsonResult(jsonErrorResult);
         }
 
-        dbp = new DbProvider(DbType.Sqlite);
+        dbp = new DataDbProvider(DbType.Sqlite);
         dbp.ConfigureBucketDelete(bucketId, mainTokenId);
         var deletedCount = dbp.DeleteBucket();
         Object? jsonResult = null;
@@ -132,13 +132,13 @@ public class DataController : Controller
 
     [HttpGet("AddOwner")]
     public ActionResult AddOwner(String key, String email){
-        IDbProvider dbp = new DbProvider(DbType.Sqlite);
+        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
         var mainTokenId = dbp.WriteUsage("UpdateOwner",GetIpAddress(),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't add an owner because of invalid MainToken.Key. Please make sure you're using a valid MainToken Key!"};
             return new JsonResult(jsonErrorResult);
         }
-        dbp = new DbProvider(DbType.Sqlite);
+        dbp = new DataDbProvider(DbType.Sqlite);
         Owner o = new Owner(email);
         dbp.ConfigureOwnerInsert(o.Email);
         o.ID = dbp.Save();
