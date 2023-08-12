@@ -21,17 +21,17 @@ public class CyaController : Controller
             [FromForm] String data,
             [FromForm] String hmac,
             [FromForm] String iv){
-        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
+        ICyaDbProvider dbp = new CyaDbProvider(DbType.Sqlite);
         var mainTokenId = dbp.WriteUsage("SaveCyaData",GetIpAddress(),key);
         // if mainTokenId == 0 then an error occurred.
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't save Cya data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
-        ICyaDbProvider scp = new CyaDbProvider(DbType.Sqlite);
+        dbp = new CyaDbProvider(DbType.Sqlite);
         Cya c = new Cya(mainTokenId,data,hmac,iv);
-        scp.Configure(c);
-        var cyaId = scp.Save();
+        dbp.Configure(c);
+        var cyaId = dbp.Save();
     
         var jsonResult = new {success=true,CyaId=cyaId};
         return new JsonResult(jsonResult);
@@ -39,18 +39,18 @@ public class CyaController : Controller
 
     [HttpGet("GetData")]
     public ActionResult GetData(String key){
-        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
+        ICyaDbProvider dbp = new CyaDbProvider(DbType.Sqlite);
         var mainTokenId = dbp.WriteUsage("GetCyaData",GetIpAddress(),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve Cya data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
         
-        ICyaDbProvider scp = new CyaDbProvider(DbType.Sqlite);
+        dbp = new CyaDbProvider(DbType.Sqlite);
         Cya c = new Cya(mainTokenId);
        
-        scp.ConfigureSelect(mainTokenId);
-        c = scp.GetCyaBucket();
+        dbp.ConfigureSelect(mainTokenId);
+        c = dbp.GetCyaBucket();
 
         // if Bucket.Id is > 0 then a valid bucket was returned
         // otherwise there was not matching bucket (b.id == 0)
@@ -61,18 +61,18 @@ public class CyaController : Controller
     [HttpGet("DeleteData")]
     public ActionResult DeleteData(String key)
     {
-        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
+        ICyaDbProvider dbp = new CyaDbProvider(DbType.Sqlite);
         var mainTokenId = dbp.WriteUsage("DeleteCyaData",GetIpAddress(),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve Cya data because of invalid MainToken.Key. Data not deleted!"};
             return new JsonResult(jsonErrorResult);    
         }
 
-        ICyaDbProvider scp = new CyaDbProvider(DbType.Sqlite);
+        dbp = new CyaDbProvider(DbType.Sqlite);
         Cya c = new Cya(mainTokenId);
 
-        scp.ConfigureDelete(mainTokenId);
-        var deletedCount = scp.DeleteCyaBucket();
+        dbp.ConfigureDelete(mainTokenId);
+        var deletedCount = dbp.DeleteCyaBucket();
         Object? jsonResult = null;
         if (deletedCount > 0){
             jsonResult = new {success=(deletedCount > 0),message="Encrypted data & all associated data has been deleted."};
@@ -93,10 +93,4 @@ public class CyaController : Controller
         byte[] hash = sha.ComputeHash(Encoding.ASCII.GetBytes(value)); 
         return String.Concat(Array.ConvertAll(hash, x => x.ToString("X2"))); 
     }
-
-    // public IActionResult Index()
-    // {
-    //     return View();
-    // }
-   
 }
