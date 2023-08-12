@@ -22,7 +22,7 @@ public class CyaController : Controller
             [FromForm] String hmac,
             [FromForm] String iv){
         ICyaDbProvider dbp = new CyaDbProvider(DbType.Sqlite);
-        var mainTokenId = dbp.WriteUsage("SaveCyaData",GetIpAddress(),key);
+        var mainTokenId = dbp.WriteUsage("SaveCyaData",HelperTool.GetIpAddress(Request),key);
         // if mainTokenId == 0 then an error occurred.
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't save Cya data because of invalid MainToken.Key."};
@@ -40,7 +40,7 @@ public class CyaController : Controller
     [HttpGet("GetData")]
     public ActionResult GetData(String key){
         ICyaDbProvider dbp = new CyaDbProvider(DbType.Sqlite);
-        var mainTokenId = dbp.WriteUsage("GetCyaData",GetIpAddress(),key,false);
+        var mainTokenId = dbp.WriteUsage("GetCyaData",HelperTool.GetIpAddress(Request),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve Cya data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
@@ -62,7 +62,7 @@ public class CyaController : Controller
     public ActionResult DeleteData(String key)
     {
         ICyaDbProvider dbp = new CyaDbProvider(DbType.Sqlite);
-        var mainTokenId = dbp.WriteUsage("DeleteCyaData",GetIpAddress(),key,false);
+        var mainTokenId = dbp.WriteUsage("DeleteCyaData",HelperTool.GetIpAddress(Request),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve Cya data because of invalid MainToken.Key. Data not deleted!"};
             return new JsonResult(jsonErrorResult);    
@@ -81,16 +81,5 @@ public class CyaController : Controller
             jsonResult = new {success=(deletedCount > 0),message="Data does not exist for associated Cya Secret ID (MainToken). No data deleted."};
         }
         return new JsonResult(jsonResult);
-    }
-
-    private string GetIpAddress(){
-        return Request?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "0.0.0.0";
-    }
-
-    public string Hash(string value) 
-    { 
-        var sha = SHA256.Create();
-        byte[] hash = sha.ComputeHash(Encoding.ASCII.GetBytes(value)); 
-        return String.Concat(Array.ConvertAll(hash, x => x.ToString("X2"))); 
     }
 }

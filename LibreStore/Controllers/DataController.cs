@@ -35,7 +35,7 @@ public class DataController : Controller
 
     private ActionResult InternalSaveData(String key, String data, String hmac, String iv, String? intent = null){
         IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
-        var mainTokenId = dbp.WriteUsage("SaveData",GetIpAddress(),key);
+        var mainTokenId = dbp.WriteUsage("SaveData",HelperTool.GetIpAddress(Request),key);
         // if mainTokenId == 0 then an error occurred.
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't save data because of invalid MainToken.Key."};
@@ -51,17 +51,13 @@ public class DataController : Controller
         return new JsonResult(jsonResult);
     }
 
-    private string GetIpAddress(){
-        return Request?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "0.0.0.0";
-    }
-
     [HttpGet("GetData")]
     public ActionResult GetData(String key, Int64 bucketId){
         
         IDataDbProvider dbProvider = new DataDbProvider(DbType.Sqlite);
         // When we call WriteUsage for GetData, we don't want to create a new MainToken
         // if it already doesn't exist, so we make last param = false
-        dbProvider.WriteUsage("GetData", GetIpAddress(),key,false);
+        dbProvider.WriteUsage("GetData", HelperTool.GetIpAddress(Request),key,false);
 
         dbProvider = new DataDbProvider(DbType.Sqlite);
         dbProvider.ConfigureBucketSelect(key, bucketId);
@@ -77,7 +73,7 @@ public class DataController : Controller
     [HttpGet("GetBucketIds")]
     public ActionResult GetBucketIds(String key){
         IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
-        var mainTokenId = dbp.WriteUsage("GetBucketIds",GetIpAddress(), key,false);
+        var mainTokenId = dbp.WriteUsage("GetBucketIds",HelperTool.GetIpAddress(Request), key,false);
 
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve any data because of invalid MainToken.Key."};
@@ -96,11 +92,11 @@ public class DataController : Controller
     public ActionResult GetAllTokens(String pwd){
         List<MainToken> allTokens = new List<MainToken>();
         IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
-        if (Hash(pwd) != "86BC2CA50432385C30E2FAC2923AA6D19F7304E213DAB1D967A8D063BEF50EE1"){
-            dbp.WriteUsage("GetAllTokens - rejected",GetIpAddress(),"",false);
+        if (HelperTool.Hash(pwd) != "86BC2CA50432385C30E2FAC2923AA6D19F7304E213DAB1D967A8D063BEF50EE1"){
+            dbp.WriteUsage("GetAllTokens - rejected",HelperTool.GetIpAddress(Request),"",false);
             return new JsonResult(new {result="false",message="couldn't authenticate request"});
         }
-        dbp.WriteUsage("GetAllTokens",GetIpAddress(),"",false);
+        dbp.WriteUsage("GetAllTokens",HelperTool.GetIpAddress(Request),"",false);
         dbp = new DataDbProvider(DbType.Sqlite);
         allTokens = dbp.GetAllTokens();
 
@@ -111,7 +107,7 @@ public class DataController : Controller
     public ActionResult DeleteData(String key, long bucketId)
     {
         IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
-        var mainTokenId = dbp.WriteUsage("DeleteData",GetIpAddress(),key,false);
+        var mainTokenId = dbp.WriteUsage("DeleteData",HelperTool.GetIpAddress(Request),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't delete Data because of invalid MainToken.Key. Data not deleted!"};
             return new JsonResult(jsonErrorResult);
@@ -133,7 +129,7 @@ public class DataController : Controller
     [HttpGet("AddOwner")]
     public ActionResult AddOwner(String key, String email){
         IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
-        var mainTokenId = dbp.WriteUsage("UpdateOwner",GetIpAddress(),key,false);
+        var mainTokenId = dbp.WriteUsage("UpdateOwner",HelperTool.GetIpAddress(Request),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't add an owner because of invalid MainToken.Key. Please make sure you're using a valid MainToken Key!"};
             return new JsonResult(jsonErrorResult);
@@ -155,11 +151,4 @@ public class DataController : Controller
          return new JsonResult(jsonResult);
 
     }
-
-    static public string Hash(string value) 
-    { 
-        var sha = SHA256.Create();
-        byte[] hash = sha.ComputeHash(Encoding.ASCII.GetBytes(value)); 
-        return String.Concat(Array.ConvertAll(hash, x => x.ToString("X2"))); 
-    }   
 }
