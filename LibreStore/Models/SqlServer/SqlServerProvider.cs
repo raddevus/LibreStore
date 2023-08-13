@@ -5,7 +5,11 @@ public class SqlServerProvider
     protected SqlConnection connection;
     public SqlCommand command{get;set;}
         
-    public SqlServerProvider( String connectionDetails = "Data Source=librestore.db")
+    /// <summary>
+    /// Make sure you set the password in the connection!
+    /// </summary>
+    /// <param name="connectionDetails"></param>
+    public SqlServerProvider( String connectionDetails = "Server=172.17.0.2;Initial Catalog=LibreStore;User ID=sa;Password=;Encrypt=False;")
     {
         connection = new SqlConnection(connectionDetails);
         command = connection.CreateCommand();
@@ -27,32 +31,32 @@ public class SqlServerProvider
     }
 
     public int ConfigureMainTokenInsert(String mtKey){
-        String sqlCommand = @"insert into maintoken (key)  
-                select $key 
+        String sqlCommand = @"insert into maintoken ([Key])
+                select @key
                 where not exists 
-                (select key from maintoken where key=$key);
-                    select id from maintoken where key=$key and active=1";
+                (select [Key] from maintoken where [Key]=@key);
+                    select id from maintoken where [Key]=@key and active=1";
         
         command.CommandText = sqlCommand;
-        command.Parameters.AddWithValue("$key",mtKey);
+        command.Parameters.AddWithValue("@key",mtKey);
         return 0;
     }
 
     public int ConfigureMainTokenSelect(String mtKey){
         String sqlCommand = @"select id from maintoken
-                where key = $key and active=1";
+                where [Key] = @key and active=1";
         
         command.CommandText = sqlCommand;
-        command.Parameters.AddWithValue("$key",mtKey);
+        command.Parameters.AddWithValue("@key",mtKey);
         return 0;
     }
 
     public int ConfigureUsage(Usage usage){
-        command.CommandText = @"INSERT into Usage (maintokenid,ipaddress,action)values($mainTokenId,$ipaddress,$action)";
+        command.CommandText = @"INSERT into Usage (maintokenid,ipaddress,action)values(@MainTokenId,@IPAddress,@Action)";
         // Console.WriteLine($"usage.MainTokenId: {usage.MainTokenId}");
-        command.Parameters.AddWithValue("$mainTokenId",usage.MainTokenId);
-        command.Parameters.AddWithValue("$ipaddress",usage.IpAddress);
-        command.Parameters.AddWithValue("$action", usage.Action);
+        command.Parameters.AddWithValue("@MainTokenId",usage.MainTokenId);
+        command.Parameters.AddWithValue("@IpAddress",usage.IpAddress);
+        command.Parameters.AddWithValue("@Action", usage.Action);
         return 0;
     }
 

@@ -15,6 +15,9 @@ public class DataDbProvider: IDataDbProvider{
                 break;
             }
             case DbType.SqlServer:{
+                if (connectionDetails == String.Empty){
+                    connectionDetails = "Server=172.17.0.2;Initial Catalog=LibreStore;User ID=sa;Password=;Encrypt=False;";
+                }
                 dbProvider = new SqlServerDataProvider(connectionDetails);
                 break;
             }
