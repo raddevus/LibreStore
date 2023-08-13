@@ -39,3 +39,34 @@ CREATE TABLE [Usage]
 -- Usage as a Single Line
 CREATE TABLE [Usage]([ID] INTEGER NOT NULL IDENTITY(1,1), [MainTokenId] INTEGER NOT NULL default(0), [IpAddress] NVARCHAR(60) CONSTRAINT ipAddrMax check(LEN(IpAddress) <= 60),     [Action] NVARCHAR(75) CONSTRAINT actionMax check(LEN(Action) <= 75), [Created] NVARCHAR(30) default (getdate()) CONSTRAINT maxUsageCreated check(LEN(Created) <= 30), [Active] BIT default (1));
 
+
+CREATE TABLE [Owner]
+(
+    [ID] INTEGER NOT NULL IDENTITY(1,1),
+    [Email] NVARCHAR(200) UNIQUE CONSTRAINT maxEmail check(LEN(Email) <= 200),
+    [ExpireDate] NVARCHAR(30) CONSTRAINT maxExpire check(LEN(ExpireDate) <= 30),
+    [Subscribed] BIT default(0),
+    [Created] NVARCHAR(30) default (getdate()) CONSTRAINT maxOwnerCreated check(LEN(Created) <= 30),
+    [Updated] NVARCHAR(30) CONSTRAINT maxOwnerUpdated check(LEN(Updated) <= 30),
+    [Active] BIT default(1)
+)
+
+-- ###########################
+-- Owner as a Single Line
+CREATE TABLE [Owner]([ID] INTEGER NOT NULL IDENTITY(1,1), [Email] NVARCHAR(200) UNIQUE CONSTRAINT maxEmail check(LEN(Email) <= 200), [ExpireDate] NVARCHAR(30) CONSTRAINT maxExpire check(LEN(ExpireDate) <= 30), [Subscribed] BIT default(0), [Created] NVARCHAR(30) default (getdate()) CONSTRAINT maxOwnerCreated check(LEN(Created) <= 30), [Updated] NVARCHAR(30) CONSTRAINT maxOwnerUpdated check(LEN(Updated) <= 30), [Active] BIT default(1));
+
+CREATE TABLE [CyaBucket]
+(
+    [ID] INTEGER NOT NULL IDENTITY(1,1),
+    [MainTokenId] INTEGER NOT NULL UNIQUE,
+    [Data] NVARCHAR(MAX) NOT NULL CONSTRAINT cyaDataMax check(LEN(Data) <= 40000),
+    [Hmac] NVARCHAR(64) NOT NULL CONSTRAINT cyaHmacMax check(LEN(Hmac) <= 64),
+    [Iv] NVARCHAR(32) NOT NULL  CONSTRAINT cyaIvMax check(LEN(Iv) <= 32),
+    [Created] NVARCHAR(30) default (getdate()) CONSTRAINT cyaCreatedMax check(LEN(Created) <= 30),
+    [Updated] NVARCHAR(30) CONSTRAINT cyaUpdatedMax check(LEN(Updated) <= 30),
+    [Active] BIT default(1)
+)
+
+-- ###########################
+-- CyaBucket as a Single Line
+CREATE TABLE [CyaBucket]( [ID] INTEGER NOT NULL IDENTITY(1,1), [MainTokenId] INTEGER NOT NULL UNIQUE, [Data] NVARCHAR(MAX) NOT NULL CONSTRAINT cyaDataMax check(LEN(Data) <= 40000),    [Hmac] NVARCHAR(64) NOT NULL CONSTRAINT cyaHmacMax check(LEN(Hmac) <= 64), [Iv] NVARCHAR(32) NOT NULL  CONSTRAINT cyaIvMax check(LEN(Iv) <= 32), [Created] NVARCHAR(30) default (getdate()) CONSTRAINT cyaCreatedMax check(LEN(Created) <= 30), [Updated] NVARCHAR(30) CONSTRAINT cyaUpdatedMax check(LEN(Updated) <= 30), [Active] BIT default(1));
