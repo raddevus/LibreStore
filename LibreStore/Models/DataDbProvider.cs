@@ -15,7 +15,7 @@ public class DataDbProvider: IDataDbProvider{
                 break;
             }
             case DbType.SqlServer:{
-                dbProvider = new SqlServerProvider(connectionDetails);
+                dbProvider = new SqlServerDataProvider(connectionDetails);
                 break;
             }
         }

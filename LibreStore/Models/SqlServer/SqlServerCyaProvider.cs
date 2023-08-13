@@ -1,10 +1,31 @@
-public class SqlServerCyaProvider : CyaDbProvider
+using LibreStore.Models;
+
+public class SqlServerCyaProvider : SqlServerProvider, ICyaDbProvider
 {
     //private  connection;
     // public SqliteCommand command{get;set;}
-    public SqlServerCyaProvider(String connectionDetails) :base(DbType.SqlServer, connectionDetails)
+    public SqlServerCyaProvider(String connectionDetails) :base(connectionDetails)
     {
         
     }
-    
+
+    public int Configure(Cya cya)
+    {
+        throw new NotImplementedException();
+    }
+
+    public int ConfigureDelete(long mainTokenId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public int ConfigureSelect(long mainTokenId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Cya GetCyaBucket()
+    {
+        throw new NotImplementedException();
+    }
 }
