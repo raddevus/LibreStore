@@ -9,11 +9,13 @@ namespace LibreStore.Controllers;
 [Route("[controller]")]
 public class CyaController : Controller
 {
-    private readonly ILogger<CyaController> _logger;
+    private readonly IConfiguration _config;
+    private string dbType;
 
-    public CyaController(ILogger<CyaController> logger)
-    {
-        _logger = logger;
+    public CyaController(IConfiguration _configuration){
+        _config = _configuration;
+        dbType = _config["dbType"];
+        Console.WriteLine($"###### {dbType} ##########");
     }
 
     [HttpPost("SaveData")]
@@ -21,14 +23,14 @@ public class CyaController : Controller
             [FromForm] String data,
             [FromForm] String hmac,
             [FromForm] String iv){
-        ICyaDbProvider dbp = new CyaDbProvider(DbType.Sqlite);
+        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType));
         var mainTokenId = dbp.WriteUsage("SaveCyaData",HelperTool.GetIpAddress(Request),key);
         // if mainTokenId == 0 then an error occurred.
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't save Cya data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
-        dbp = new CyaDbProvider(DbType.Sqlite);
+        dbp = new CyaDbProvider(HelperTool.GetDbType(dbType));
         Cya c = new Cya(mainTokenId,data,hmac,iv);
         dbp.Configure(c);
         var cyaId = dbp.Save();
@@ -39,14 +41,14 @@ public class CyaController : Controller
 
     [HttpGet("GetData")]
     public ActionResult GetData(String key){
-        ICyaDbProvider dbp = new CyaDbProvider(DbType.Sqlite);
+        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType));
         var mainTokenId = dbp.WriteUsage("GetCyaData",HelperTool.GetIpAddress(Request),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve Cya data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
         
-        dbp = new CyaDbProvider(DbType.Sqlite);
+        dbp = new CyaDbProvider(HelperTool.GetDbType(dbType));
         Cya c = new Cya(mainTokenId);
        
         dbp.ConfigureSelect(mainTokenId);
@@ -61,14 +63,14 @@ public class CyaController : Controller
     [HttpGet("DeleteData")]
     public ActionResult DeleteData(String key)
     {
-        ICyaDbProvider dbp = new CyaDbProvider(DbType.Sqlite);
+        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType));
         var mainTokenId = dbp.WriteUsage("DeleteCyaData",HelperTool.GetIpAddress(Request),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve Cya data because of invalid MainToken.Key. Data not deleted!"};
             return new JsonResult(jsonErrorResult);    
         }
 
-        dbp = new CyaDbProvider(DbType.Sqlite);
+        dbp = new CyaDbProvider(HelperTool.GetDbType(dbType));
         Cya c = new Cya(mainTokenId);
 
         dbp.ConfigureDelete(mainTokenId);
