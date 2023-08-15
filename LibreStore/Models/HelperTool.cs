@@ -16,4 +16,11 @@ public static class HelperTool{
   {
     return request?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "0.0.0.0";
   }
+
+  public static DbType GetDbType(String dbType){
+    if (string.IsNullOrWhiteSpace(dbType)){
+      return DbType.Sqlite;
+    }
+    return Enum.TryParse(dbType, true, out DbType result) ? result : DbType.Sqlite;
+  }
 }

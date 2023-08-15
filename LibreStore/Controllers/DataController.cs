@@ -9,11 +9,14 @@ namespace LibreStore.Controllers;
 [Route("[controller]")]
 public class DataController : Controller
 {
-    private readonly ILogger<DataController> _logger;
+    
+    private readonly IConfiguration _config;
+    private string dbType;
 
-    public DataController(ILogger<DataController> logger)
-    {
-        _logger = logger;
+    public DataController(IConfiguration _configuration){
+        _config = _configuration;
+        dbType = _config["dbType"];
+        Console.WriteLine($"###### {dbType} ##########");
     }
 
     [HttpGet("SaveData")]
@@ -91,13 +94,14 @@ public class DataController : Controller
     [HttpGet("GetAllTokens")]
     public ActionResult GetAllTokens(String pwd){
         List<MainToken> allTokens = new List<MainToken>();
-        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
+        
+        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
         if (HelperTool.Hash(pwd) != "86BC2CA50432385C30E2FAC2923AA6D19F7304E213DAB1D967A8D063BEF50EE1"){
             dbp.WriteUsage("GetAllTokens - rejected",HelperTool.GetIpAddress(Request),"",false);
             return new JsonResult(new {result="false",message="couldn't authenticate request"});
         }
         dbp.WriteUsage("GetAllTokens",HelperTool.GetIpAddress(Request),"",false);
-        dbp = new DataDbProvider(DbType.Sqlite);
+        dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
         allTokens = dbp.GetAllTokens();
 
         return new JsonResult(allTokens);
