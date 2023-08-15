@@ -14,4 +14,6 @@ public interface IDataDbProvider: IDbProvider{
     Bucket GetBucket();
     Int64 UpdateOwner();
     List<MainToken> GetAllTokens();
+    Int64 Save();
+	Int64 WriteUsage(String action, String ipAddress, String key="", bool shouldInsert=true);
 }

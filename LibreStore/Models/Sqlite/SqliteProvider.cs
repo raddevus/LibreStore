@@ -1,15 +1,19 @@
+using System.Data.Common;
 using Microsoft.Data.Sqlite;
 using LibreStore.Models;
 
-public class SqliteProvider {
+public class SqliteProvider : IDbProvider {
 
-    protected SqliteConnection connection;
-    public SqliteCommand command{get;set;}
+    public  DbConnection Connection{get;set;}
+    public DbCommand Command{get;set;}
+    
+    protected SqliteCommand command;
         
     public SqliteProvider( String connectionDetails = "Data Source=librestore.db")
     {
-        connection = new SqliteConnection(connectionDetails);
-        command = connection.CreateCommand();
+        Connection = new SqliteConnection(connectionDetails);
+        Command = Connection.CreateCommand();
+        command = Command as SqliteCommand;
     }
 
     public Int64 WriteUsage(String action, String ipAddress, String key="", bool shouldInsert=true){
@@ -60,7 +64,7 @@ public class SqliteProvider {
     public int GetOrInsert(){
         try{
             Console.WriteLine("GetOrInsert...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opening...");
             using (var reader = command.ExecuteReader())
             {
@@ -76,8 +80,8 @@ public class SqliteProvider {
             return 0;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
@@ -85,7 +89,7 @@ public class SqliteProvider {
     public Int32 DeleteBucket(){
         try{
             Console.WriteLine("DeleteBucket...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opening...");
             // returns number of records deleted
             return command.ExecuteNonQuery();
@@ -96,8 +100,8 @@ public class SqliteProvider {
             return -1;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
@@ -106,7 +110,7 @@ public class SqliteProvider {
         
         try{
             Console.WriteLine("Saving...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opened.");
             // id should be last id inserted into table
             var id = Convert.ToInt64(command.ExecuteScalar());
@@ -118,9 +122,11 @@ public class SqliteProvider {
             return 0;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
+
+    
 }

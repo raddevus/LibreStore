@@ -39,7 +39,7 @@ public class HomeController : Controller
     public ActionResult StopService(String pwd){
         
         // TODO: Read DB type from some type of app config
-        IDbProvider dbp = new DataDbProvider(DbType.Sqlite);
+        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
         if (HelperTool.Hash(pwd) != "86BC2CA50432385C30E2FAC2923AA6D19F7304E213DAB1D967A8D063BEF50EE1"){
             dbp.WriteUsage("StopService - FAIL!", HelperTool.GetIpAddress(Request),"",false);    
             return new JsonResult(new {result="false",message="couldn't authenticate request"});

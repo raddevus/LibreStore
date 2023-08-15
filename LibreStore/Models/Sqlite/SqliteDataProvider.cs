@@ -68,7 +68,7 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
         command.CommandText = "Select * from MainToken";
         List<MainToken> allTokens = new List<MainToken>();
         try{
-            connection.Open();
+            Connection.Open();
             using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
@@ -89,8 +89,8 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
             return allTokens;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
@@ -98,7 +98,7 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
     public List<long> GetAllBucketIds(){
         List<long> allBucketIds = new List<long>();
         try{
-            connection.Open();
+            Connection.Open();
             using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
@@ -116,8 +116,8 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
             return allBucketIds;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
@@ -125,7 +125,7 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
     public Bucket GetBucket(){
         try{
             Console.WriteLine("GetBucket...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opening...");
             using (var reader = command.ExecuteReader())
             {
@@ -161,15 +161,15 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
             return new Bucket(0,0);
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
     public Int64 UpdateOwner(){
         try{
             Console.WriteLine("Updating OwnerId...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opened.");
             // id should be last id inserted into table
             var id = Convert.ToInt64(command.ExecuteScalar());
@@ -181,8 +181,8 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
             return 0;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }

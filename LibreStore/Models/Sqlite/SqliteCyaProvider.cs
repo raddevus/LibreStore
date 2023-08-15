@@ -33,7 +33,7 @@ public int ConfigureDelete(long mainTokenId){
     public Cya GetCyaBucket(){
         try{
             Console.WriteLine("GetCyaBucket...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opening...");
             using (var reader = command.ExecuteReader())
             {
@@ -65,8 +65,8 @@ public int ConfigureDelete(long mainTokenId){
             return new Cya(0,0);
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }

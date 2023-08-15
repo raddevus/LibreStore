@@ -47,7 +47,7 @@ public class SqlServerDataProvider : SqlServerProvider, IDataDbProvider{
         command.CommandText = "Select * from MainToken";
         List<MainToken> allTokens = new List<MainToken>();
         try{
-            connection.Open();
+            Connection.Open();
             using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
@@ -68,8 +68,8 @@ public class SqlServerDataProvider : SqlServerProvider, IDataDbProvider{
             return allTokens;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }

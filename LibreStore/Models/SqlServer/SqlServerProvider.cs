@@ -1,8 +1,10 @@
+using System.Data.Common;
 using LibreStore.Models;
 using Microsoft.Data.SqlClient;
-public class SqlServerProvider
-{
-    protected SqlConnection connection;
+public class SqlServerProvider : IDbProvider {
+
+    public  DbConnection Connection{get;set;}
+    public DbCommand Command{get;set;}
     public SqlCommand command{get;set;}
         
     /// <summary>
@@ -11,8 +13,9 @@ public class SqlServerProvider
     /// <param name="connectionDetails"></param>
     public SqlServerProvider( String connectionDetails = "Server=172.17.0.2;Initial Catalog=LibreStore;User ID=sa;Password=;Encrypt=False;")
     {
-        connection = new SqlConnection(connectionDetails);
-        command = connection.CreateCommand();
+        Connection = new SqlConnection(connectionDetails);
+        Command = Connection.CreateCommand();
+        command = Command as SqlCommand;
     }
 
     public Int64 WriteUsage(String action, String ipAddress, String key="", bool shouldInsert=true){
@@ -63,7 +66,7 @@ public class SqlServerProvider
     public int GetOrInsert(){
         try{
             Console.WriteLine("GetOrInsert...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opening...");
             using (var reader = command.ExecuteReader())
             {
@@ -79,8 +82,8 @@ public class SqlServerProvider
             return 0;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
@@ -88,7 +91,7 @@ public class SqlServerProvider
     public Int32 DeleteBucket(){
         try{
             Console.WriteLine("DeleteBucket...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opening...");
             // returns number of records deleted
             return command.ExecuteNonQuery();
@@ -99,8 +102,8 @@ public class SqlServerProvider
             return -1;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
@@ -109,7 +112,7 @@ public class SqlServerProvider
         
         try{
             Console.WriteLine("Saving...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opened.");
             // id should be last id inserted into table
             var id = Convert.ToInt64(command.ExecuteScalar());
@@ -121,8 +124,8 @@ public class SqlServerProvider
             return 0;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
