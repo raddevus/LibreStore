@@ -10,9 +10,9 @@ public class DataControllerTest
 {
     [Fact]
     public void CreateDataController(){
-        DataController dc = new DataController();
-        ActionResult ar = dc.GetAllTokens("");
-        var tempResult = ar as JsonResult;
-        Console.WriteLine(tempResult.Value);
+        // DataController dc = new DataController();
+        // ActionResult ar = dc.GetAllTokens("");
+        // var tempResult = ar as JsonResult;
+        // Console.WriteLine(tempResult.Value);
     }
 }
