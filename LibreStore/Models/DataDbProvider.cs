@@ -86,14 +86,4 @@ public class DataDbProvider: DbCommon, IDbProvider{
     public Int64 UpdateOwner(){
         return dbProvider.UpdateOwner();
     }
-
-    // public long Save()
-    // {
-    //     throw new NotImplementedException();
-    // }
-
-    // public long WriteUsage(string action, string ipAddress, string key = "", bool shouldInsert = true)
-    // {
-    //     dbProvider.WriteUsage(action,ipAddress,key,shouldInsert);
-    // }
 }
