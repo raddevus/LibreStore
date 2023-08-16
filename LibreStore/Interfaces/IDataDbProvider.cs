@@ -1,5 +1,7 @@
+using System.Data.Common;
 using LibreStore.Models;
 public interface IDataDbProvider: IDbProvider{
+
     int ConfigureBucket(Bucket bucket);
     int ConfigureBucketSelect(String key, Int64 bucketId);
     int ConfigureBucketIdSelect(long mainTokenId);
@@ -14,6 +16,5 @@ public interface IDataDbProvider: IDbProvider{
     Bucket GetBucket();
     Int64 UpdateOwner();
     List<MainToken> GetAllTokens();
-    Int64 Save();
-	Int64 WriteUsage(String action, String ipAddress, String key="", bool shouldInsert=true);
+    
 }

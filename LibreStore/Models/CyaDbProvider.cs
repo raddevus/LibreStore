@@ -1,13 +1,13 @@
 using System.Data.Common;
 using LibreStore.Models;
 
-public class CyaDbProvider : ICyaDbProvider {
+public class CyaDbProvider : DbCommon, IDbProvider {
     
     public ICyaDbProvider dbProvider; 
     public DbCommand Command { get => dbProvider.Command; set => dbProvider.Command = value; }
     public DbConnection Connection { get => dbProvider.Connection; set => dbProvider.Connection = value; }
 
-    public CyaDbProvider(DbType dbType, String connectionDetails = "")
+    public CyaDbProvider(DbType dbType, String connectionDetails = "") 
     {
         switch (dbType){
             case DbType.Sqlite:{
@@ -15,10 +15,12 @@ public class CyaDbProvider : ICyaDbProvider {
                     connectionDetails = "Data Source=librestore.db";
                 }
                 dbProvider = new SqliteCyaProvider(connectionDetails);
+                base.dbProvider = dbProvider as IDataDbProvider;
                 break;
             }
             case DbType.SqlServer:{
                 dbProvider = new SqlServerCyaProvider(connectionDetails);
+                base.dbProvider = dbProvider.dbProvider as IDataDbProvider;
                 break;
             }
         }
@@ -46,14 +48,5 @@ public class CyaDbProvider : ICyaDbProvider {
     public Cya GetCyaBucket()
     {
         return dbProvider.GetCyaBucket();
-    }
-
-    public long Save()
-    {
-        return dbProvider.Save();
-    }
-    
-    public Int64 WriteUsage(String action, String ipAddress, String key="", bool shouldInsert=true){
-        return dbProvider.WriteUsage(action, ipAddress, key, shouldInsert);
     }
 }

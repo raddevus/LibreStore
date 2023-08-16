@@ -2,11 +2,13 @@ using Microsoft.Data.Sqlite;
 using LibreStore.Models;
 public class SqliteCyaProvider : SqliteProvider, ICyaDbProvider{
 
+  public IDbProvider dbProvider{get;set;}
   public SqliteCyaProvider(String connectionDetails): base(connectionDetails)
-    {
-        
-    }
-public int Configure(Cya cya){   
+  {
+
+  }
+
+    public int Configure(Cya cya){   
     command.CommandText = @"INSERT or REPLACE into CyaBucket (mainTokenId,data,hmac,iv)values($mainTokenId,$data,$hmac,$iv);SELECT last_insert_rowid()";
     command.Parameters.AddWithValue("$mainTokenId",cya.MainTokenId);
     command.Parameters.AddWithValue("$data",cya.Data);

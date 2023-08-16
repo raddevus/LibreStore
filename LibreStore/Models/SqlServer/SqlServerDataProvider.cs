@@ -2,6 +2,7 @@
 using LibreStore.Models;
 public class SqlServerDataProvider : SqlServerProvider, IDataDbProvider{
 
+    public IDbProvider dbProvider{get;set;}
     public SqlServerDataProvider(String connectionDetails): base(connectionDetails)
     {
         
