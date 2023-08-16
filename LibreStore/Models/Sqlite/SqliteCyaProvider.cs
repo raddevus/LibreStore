@@ -2,7 +2,7 @@ using Microsoft.Data.Sqlite;
 using LibreStore.Models;
 public class SqliteCyaProvider : SqliteProvider, ICyaDbProvider{
 
-  public IDbProvider dbProvider{get;set;}
+  public IDataDbProvider dbProvider{get;set;}
   public SqliteCyaProvider(String connectionDetails): base(connectionDetails)
   {
 

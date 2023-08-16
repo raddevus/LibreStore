@@ -15,12 +15,12 @@ public class CyaDbProvider : DbCommon, IDbProvider {
                     connectionDetails = "Data Source=librestore.db";
                 }
                 dbProvider = new SqliteCyaProvider(connectionDetails);
-                base.dbProvider = dbProvider as IDataDbProvider;
+                base.dbProvider = new SqliteDataProvider(connectionDetails);
                 break;
             }
             case DbType.SqlServer:{
                 dbProvider = new SqlServerCyaProvider(connectionDetails);
-                base.dbProvider = dbProvider.dbProvider as IDataDbProvider;
+                base.dbProvider = new SqlServerDataProvider(connectionDetails);
                 break;
             }
         }
