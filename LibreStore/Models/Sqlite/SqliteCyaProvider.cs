@@ -7,35 +7,35 @@ public class SqliteCyaProvider : SqliteProvider, ICyaDbProvider{
         
     }
 public int Configure(Cya cya){   
-    command.CommandText = @"INSERT or REPLACE into CyaBucket (mainTokenId,data,hmac,iv)values($mainTokenId,$data,$hmac,$iv);SELECT last_insert_rowid()";
-    command.Parameters.AddWithValue("$mainTokenId",cya.MainTokenId);
-    command.Parameters.AddWithValue("$data",cya.Data);
-    command.Parameters.AddWithValue("$hmac",cya.Hmac);
-    command.Parameters.AddWithValue("$iv",cya.Iv);
+    Command.CommandText = @"INSERT or REPLACE into CyaBucket (mainTokenId,data,hmac,iv)values($mainTokenId,$data,$hmac,$iv);SELECT last_insert_rowid()";
+    Command.Parameters.AddWithValue("$mainTokenId",cya.MainTokenId);
+    Command.Parameters.AddWithValue("$data",cya.Data);
+    Command.Parameters.AddWithValue("$hmac",cya.Hmac);
+    Command.Parameters.AddWithValue("$iv",cya.Iv);
     return 0;
 }
 
 public int ConfigureDelete(long mainTokenId){
-    command.CommandText = 
+    Command.CommandText = 
         @"delete from cyabucket
             where mainTokenId = $id";
-    command.Parameters.AddWithValue("$id",mainTokenId);
+    Command.Parameters.AddWithValue("$id",mainTokenId);
     return 0;
       
 }
     public int ConfigureSelect(long mainTokenId){
-        command.CommandText = 
+        Command.CommandText = 
             @"select * from cyabucket
                 where mainTokenId = $id";
-        command.Parameters.AddWithValue("$id",mainTokenId);
+        Command.Parameters.AddWithValue("$id",mainTokenId);
         return 0;
     }
     public Cya GetCyaBucket(){
         try{
             Console.WriteLine("GetCyaBucket...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opening...");
-            using (var reader = command.ExecuteReader())
+            using (var reader = Command.ExecuteReader())
             {
                 reader.Read();
                 var id = reader.GetInt64(0);
@@ -65,8 +65,8 @@ public int ConfigureDelete(long mainTokenId){
             return new Cya(0,0);
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }

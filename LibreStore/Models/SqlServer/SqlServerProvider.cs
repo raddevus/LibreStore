@@ -2,8 +2,8 @@ using LibreStore.Models;
 using Microsoft.Data.SqlClient;
 public class SqlServerProvider
 {
-    protected SqlConnection connection;
-    public SqlCommand command{get;set;}
+    protected SqlConnection Connection;
+    public SqlCommand Command{get;set;}
         
     /// <summary>
     /// Make sure you set the password in the connection!
@@ -11,8 +11,8 @@ public class SqlServerProvider
     /// <param name="connectionDetails"></param>
     public SqlServerProvider( String connectionDetails = "Server=172.17.0.2;Initial Catalog=LibreStore;User ID=sa;Password=;Encrypt=False;")
     {
-        connection = new SqlConnection(connectionDetails);
-        command = connection.CreateCommand();
+        Connection = new SqlConnection(connectionDetails);
+        Command = Connection.CreateCommand();
     }
 
     public Int64 WriteUsage(String action, String ipAddress, String key="", bool shouldInsert=true){
@@ -37,8 +37,8 @@ public class SqlServerProvider
                 (select [Key] from maintoken where [Key]=@key);
                     select id from maintoken where [Key]=@key and active=1";
         
-        command.CommandText = sqlCommand;
-        command.Parameters.AddWithValue("@key",mtKey);
+        Command.CommandText = sqlCommand;
+        Command.Parameters.AddWithValue("@key",mtKey);
         return 0;
     }
 
@@ -46,26 +46,26 @@ public class SqlServerProvider
         String sqlCommand = @"select id from maintoken
                 where [Key] = @key and active=1";
         
-        command.CommandText = sqlCommand;
-        command.Parameters.AddWithValue("@key",mtKey);
+        Command.CommandText = sqlCommand;
+        Command.Parameters.AddWithValue("@key",mtKey);
         return 0;
     }
 
     public int ConfigureUsage(Usage usage){
-        command.CommandText = @"INSERT into Usage (maintokenid,ipaddress,action)values(@MainTokenId,@IPAddress,@Action)";
+        Command.CommandText = @"INSERT into Usage (maintokenid,ipaddress,action)values(@MainTokenId,@IPAddress,@Action)";
         // Console.WriteLine($"usage.MainTokenId: {usage.MainTokenId}");
-        command.Parameters.AddWithValue("@MainTokenId",usage.MainTokenId);
-        command.Parameters.AddWithValue("@IpAddress",usage.IpAddress);
-        command.Parameters.AddWithValue("@Action", usage.Action);
+        Command.Parameters.AddWithValue("@MainTokenId",usage.MainTokenId);
+        Command.Parameters.AddWithValue("@IpAddress",usage.IpAddress);
+        Command.Parameters.AddWithValue("@Action", usage.Action);
         return 0;
     }
 
     public int GetOrInsert(){
         try{
             Console.WriteLine("GetOrInsert...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opening...");
-            using (var reader = command.ExecuteReader())
+            using (var reader = Command.ExecuteReader())
             {
                 reader.Read();
                 var id = reader.GetInt32(0);
@@ -79,8 +79,8 @@ public class SqlServerProvider
             return 0;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
@@ -88,10 +88,10 @@ public class SqlServerProvider
     public Int32 DeleteBucket(){
         try{
             Console.WriteLine("DeleteBucket...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opening...");
             // returns number of records deleted
-            return command.ExecuteNonQuery();
+            return Command.ExecuteNonQuery();
             
         }
         catch(Exception ex){
@@ -99,8 +99,8 @@ public class SqlServerProvider
             return -1;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
@@ -109,10 +109,10 @@ public class SqlServerProvider
         
         try{
             Console.WriteLine("Saving...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opened.");
             // id should be last id inserted into table
-            var id = Convert.ToInt64(command.ExecuteScalar());
+            var id = Convert.ToInt64(Command.ExecuteScalar());
             Console.WriteLine("inserted.");
             return id;
         }
@@ -121,8 +121,8 @@ public class SqlServerProvider
             return 0;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }

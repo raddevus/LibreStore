@@ -8,49 +8,49 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
     }
 
     public int ConfigureBucket(Bucket bucket){
-        command.CommandText = @"INSERT into Bucket (mainTokenId,intent,data,hmac,iv)values($mainTokenId,$intent,$data,$hmac,$iv);SELECT last_insert_rowid()";
-        command.Parameters.AddWithValue("$mainTokenId",bucket.MainTokenId);
-        command.Parameters.AddWithValue("$intent",(object)bucket.Intent ?? System.DBNull.Value);
-        command.Parameters.AddWithValue("$data",bucket.Data);
-        command.Parameters.AddWithValue("$hmac",bucket.Hmac);
-        command.Parameters.AddWithValue("$iv",bucket.Iv);
+        Command.CommandText = @"INSERT into Bucket (mainTokenId,intent,data,hmac,iv)values($mainTokenId,$intent,$data,$hmac,$iv);SELECT last_insert_rowid()";
+        Command.Parameters.AddWithValue("$mainTokenId",bucket.MainTokenId);
+        Command.Parameters.AddWithValue("$intent",(object)bucket.Intent ?? System.DBNull.Value);
+        Command.Parameters.AddWithValue("$data",bucket.Data);
+        Command.Parameters.AddWithValue("$hmac",bucket.Hmac);
+        Command.Parameters.AddWithValue("$iv",bucket.Iv);
         return 0;
     }
 
     public int ConfigureBucketSelect(String key, Int64 bucketId){
-        command.CommandText = @"select b.* from MainToken as mt 
+        Command.CommandText = @"select b.* from MainToken as mt 
                 join bucket as b on mt.id = b.mainTokenId 
                 where mt.Key=$key and b.Id = $id
                 and b.active = 1 and mt.active=1";
-        command.Parameters.AddWithValue("$key",key);
-        command.Parameters.AddWithValue("$id",bucketId);
+        Command.Parameters.AddWithValue("$key",key);
+        Command.Parameters.AddWithValue("$id",bucketId);
         return 0;
     }
 
     public int ConfigureBucketIdSelect(long mainTokenId){
-        command.CommandText =
+        Command.CommandText =
                     @"select Id from bucket where MainTokenId = $id";
-        command.Parameters.AddWithValue("$id",mainTokenId);
+        Command.Parameters.AddWithValue("$id",mainTokenId);
         return 0;
     }
 
     public int ConfigureBucketDelete(long bucketId, long mainTokenId){
-        command.CommandText =
+        Command.CommandText =
             @"delete from bucket
                 where mainTokenId = $tokenId
                 and id = $id";
-        command.Parameters.AddWithValue("$tokenId",mainTokenId);
-        command.Parameters.AddWithValue("$id", bucketId);
+        Command.Parameters.AddWithValue("$tokenId",mainTokenId);
+        Command.Parameters.AddWithValue("$id", bucketId);
         return 0;
     }
 
     public int ConfigureOwnerInsert(String email){
-        command.CommandText = @"insert into Owner (email)  
+        Command.CommandText = @"insert into Owner (email)  
                 select $email 
                 where not exists 
                 (select email from owner where email=$email);
                     select id from owner where email=$email and active=1";
-        command.Parameters.AddWithValue("$email",email);
+        Command.Parameters.AddWithValue("$email",email);
         return 0; // success
     }
 
@@ -58,18 +58,18 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
         // 2023-06-01 Discovered the sqlite Returning clause -- Returns value(s) after update or insert.
         // See https://www.sqlite.org/lang_returning.html
         String sqlCommand = @"update maintoken set OwnerId = $ownerId where key = $key and active=1 Returning ID";
-        command.CommandText = sqlCommand;
-        command.Parameters.AddWithValue("$ownerId", mainToken.OwnerId);
-        command.Parameters.AddWithValue("$key", mainToken.Key);
+        Command.CommandText = sqlCommand;
+        Command.Parameters.AddWithValue("$ownerId", mainToken.OwnerId);
+        Command.Parameters.AddWithValue("$key", mainToken.Key);
         return 0;
     }
 
     public List<MainToken> GetAllTokens(){
-        command.CommandText = "Select * from MainToken";
+        Command.CommandText = "Select * from MainToken";
         List<MainToken> allTokens = new List<MainToken>();
         try{
-            connection.Open();
-            using (var reader = command.ExecuteReader())
+            Connection.Open();
+            using (var reader = Command.ExecuteReader())
             {
                 while (reader.Read())
                 {
@@ -89,8 +89,8 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
             return allTokens;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
@@ -98,8 +98,8 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
     public List<long> GetAllBucketIds(){
         List<long> allBucketIds = new List<long>();
         try{
-            connection.Open();
-            using (var reader = command.ExecuteReader())
+            Connection.Open();
+            using (var reader = Command.ExecuteReader())
             {
                 while (reader.Read())
                 {
@@ -116,8 +116,8 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
             return allBucketIds;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
@@ -125,9 +125,9 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
     public Bucket GetBucket(){
         try{
             Console.WriteLine("GetBucket...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opening...");
-            using (var reader = command.ExecuteReader())
+            using (var reader = Command.ExecuteReader())
             {
                 reader.Read();
                 var id = reader.GetInt64(0);
@@ -161,18 +161,18 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
             return new Bucket(0,0);
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
     public Int64 UpdateOwner(){
         try{
             Console.WriteLine("Updating OwnerId...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opened.");
             // id should be last id inserted into table
-            var id = Convert.ToInt64(command.ExecuteScalar());
+            var id = Convert.ToInt64(Command.ExecuteScalar());
             Console.WriteLine("inserted.");
             return id;
         }
@@ -181,8 +181,8 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
             return 0;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }

@@ -3,13 +3,13 @@ using LibreStore.Models;
 
 public class SqliteProvider {
 
-    protected SqliteConnection connection;
-    public SqliteCommand command{get;set;}
+    protected SqliteConnection Connection;
+    public SqliteCommand Command{get;set;}
         
     public SqliteProvider( String connectionDetails = "Data Source=librestore.db")
     {
-        connection = new SqliteConnection(connectionDetails);
-        command = connection.CreateCommand();
+        Connection = new SqliteConnection(connectionDetails);
+        Command = Connection.CreateCommand();
     }
 
     public Int64 WriteUsage(String action, String ipAddress, String key="", bool shouldInsert=true){
@@ -34,8 +34,8 @@ public class SqliteProvider {
                 (select key from maintoken where key=$key);
                     select id from maintoken where key=$key and active=1";
         
-        command.CommandText = sqlCommand;
-        command.Parameters.AddWithValue("$key",mtKey);
+        Command.CommandText = sqlCommand;
+        Command.Parameters.AddWithValue("$key",mtKey);
         return 0;
     }
 
@@ -43,26 +43,26 @@ public class SqliteProvider {
         String sqlCommand = @"select id from maintoken
                 where key = $key and active=1";
         
-        command.CommandText = sqlCommand;
-        command.Parameters.AddWithValue("$key",mtKey);
+        Command.CommandText = sqlCommand;
+        Command.Parameters.AddWithValue("$key",mtKey);
         return 0;
     }
 
     public int ConfigureUsage(Usage usage){
-        command.CommandText = @"INSERT into Usage (maintokenid,ipaddress,action)values($mainTokenId,$ipaddress,$action)";
+        Command.CommandText = @"INSERT into Usage (maintokenid,ipaddress,action)values($mainTokenId,$ipaddress,$action)";
         // Console.WriteLine($"usage.MainTokenId: {usage.MainTokenId}");
-        command.Parameters.AddWithValue("$mainTokenId",usage.MainTokenId);
-        command.Parameters.AddWithValue("$ipaddress",usage.IpAddress);
-        command.Parameters.AddWithValue("$action", usage.Action);
+        Command.Parameters.AddWithValue("$mainTokenId",usage.MainTokenId);
+        Command.Parameters.AddWithValue("$ipaddress",usage.IpAddress);
+        Command.Parameters.AddWithValue("$action", usage.Action);
         return 0;
     }
 
     public int GetOrInsert(){
         try{
             Console.WriteLine("GetOrInsert...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opening...");
-            using (var reader = command.ExecuteReader())
+            using (var reader = Command.ExecuteReader())
             {
                 reader.Read();
                 var id = reader.GetInt32(0);
@@ -76,8 +76,8 @@ public class SqliteProvider {
             return 0;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
@@ -85,10 +85,10 @@ public class SqliteProvider {
     public Int32 DeleteBucket(){
         try{
             Console.WriteLine("DeleteBucket...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opening...");
             // returns number of records deleted
-            return command.ExecuteNonQuery();
+            return Command.ExecuteNonQuery();
             
         }
         catch(Exception ex){
@@ -96,8 +96,8 @@ public class SqliteProvider {
             return -1;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
@@ -106,10 +106,10 @@ public class SqliteProvider {
         
         try{
             Console.WriteLine("Saving...");
-            connection.Open();
+            Connection.Open();
             Console.WriteLine("Opened.");
             // id should be last id inserted into table
-            var id = Convert.ToInt64(command.ExecuteScalar());
+            var id = Convert.ToInt64(Command.ExecuteScalar());
             Console.WriteLine("inserted.");
             return id;
         }
@@ -118,8 +118,8 @@ public class SqliteProvider {
             return 0;
         }
         finally{
-            if (connection != null){
-                connection.Close();
+            if (Connection != null){
+                Connection.Close();
             }
         }
     }
