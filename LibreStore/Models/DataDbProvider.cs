@@ -9,11 +9,6 @@ public class DataDbProvider: IDataDbProvider{
         dbProvider = new DbCommonConnection(dbType, connectionDetails).dbProvider;
     }
 
-    public long WriteUsage(string action, string ipAddress, string key = "", bool shouldInsert = true)
-    {
-        return dbProvider.WriteUsage(action,ipAddress,key,shouldInsert);
-    }
-
     public int ConfigureBucket(Bucket bucket){
         return dbProvider.ConfigureBucket(bucket);
     }

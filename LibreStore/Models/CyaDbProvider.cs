@@ -49,8 +49,4 @@ public class CyaDbProvider: ICyaDbProvider{
     {
         return dbProvider.Save();
     }
-    
-    public Int64 WriteUsage(String action, String ipAddress, String key="", bool shouldInsert=true){
-        return dbProvider.WriteUsage(action, ipAddress, key, shouldInsert);
-    }
 }

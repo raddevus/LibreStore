@@ -43,14 +43,15 @@ public class DataController : Controller
     }
 
     private ActionResult InternalSaveData(String key, String data, String hmac, String iv, String? intent = null){
-        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
-        var mainTokenId = dbp.WriteUsage("SaveData",HelperTool.GetIpAddress(Request),key);
+        
+        DbCommon dbc = new DbCommon(HelperTool.GetDbType(dbType));
+        var mainTokenId = dbc.WriteUsage("SaveData",HelperTool.GetIpAddress(Request),key);
         // if mainTokenId == 0 then an error occurred.
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't save data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
-        dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
+        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
         Bucket b = new Bucket(mainTokenId,intent,data,hmac,iv);
         dbp.ConfigureBucket(b);
         
@@ -63,12 +64,13 @@ public class DataController : Controller
     [HttpGet("GetData")]
     public ActionResult GetData(String key, Int64 bucketId){
         
-        IDataDbProvider dbProvider = new DataDbProvider(HelperTool.GetDbType(dbType));
+        
+        DbCommon dbc = new DbCommon(HelperTool.GetDbType(dbType));
         // When we call WriteUsage for GetData, we don't want to create a new MainToken
         // if it already doesn't exist, so we make last param = false
-        dbProvider.WriteUsage("GetData", HelperTool.GetIpAddress(Request),key,false);
+        dbc.WriteUsage("GetData", HelperTool.GetIpAddress(Request),key,false);
 
-        dbProvider = new DataDbProvider(HelperTool.GetDbType(dbType));
+        IDataDbProvider dbProvider = new DataDbProvider(HelperTool.GetDbType(dbType));
         dbProvider.ConfigureBucketSelect(key, bucketId);
         // Bucket b = new Bucket(bucketId,mainTokenId);
         Bucket b = dbProvider.GetBucket();
@@ -81,14 +83,14 @@ public class DataController : Controller
 
     [HttpGet("GetBucketIds")]
     public ActionResult GetBucketIds(String key){
-        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
-        var mainTokenId = dbp.WriteUsage("GetBucketIds",HelperTool.GetIpAddress(Request), key,false);
+        DbCommon dbc = new DbCommon(HelperTool.GetDbType(dbType));
+        var mainTokenId = dbc.WriteUsage("GetBucketIds",HelperTool.GetIpAddress(Request), key,false);
 
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve any data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
-        dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
+        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
         dbp.ConfigureBucketIdSelect(mainTokenId);
         List<long> allBucketIds = dbp.GetAllBucketIds();
         if (allBucketIds.Count() == 0){
@@ -115,14 +117,14 @@ public class DataController : Controller
     [HttpGet("DeleteData")]
     public ActionResult DeleteData(String key, long bucketId)
     {
-        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
-        var mainTokenId = dbp.WriteUsage("DeleteData",HelperTool.GetIpAddress(Request),key,false);
+        DbCommon dbc = new DbCommon(HelperTool.GetDbType(dbType));
+        var mainTokenId = dbc.WriteUsage("DeleteData",HelperTool.GetIpAddress(Request),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't delete Data because of invalid MainToken.Key. Data not deleted!"};
             return new JsonResult(jsonErrorResult);
         }
 
-        dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
+        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
         dbp.ConfigureBucketDelete(bucketId, mainTokenId);
         var deletedCount = dbp.DeleteBucket();
         Object? jsonResult = null;
@@ -137,13 +139,13 @@ public class DataController : Controller
 
     [HttpGet("AddOwner")]
     public ActionResult AddOwner(String key, String email){
-        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
-        var mainTokenId = dbp.WriteUsage("UpdateOwner",HelperTool.GetIpAddress(Request),key,false);
+        DbCommon dbc = new DbCommon(HelperTool.GetDbType(dbType));
+        var mainTokenId = dbc.WriteUsage("UpdateOwner",HelperTool.GetIpAddress(Request),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't add an owner because of invalid MainToken.Key. Please make sure you're using a valid MainToken Key!"};
             return new JsonResult(jsonErrorResult);
         }
-        dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
+        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
         Owner o = new Owner(email);
         dbp.ConfigureOwnerInsert(o.Email);
         o.ID = dbp.Save();

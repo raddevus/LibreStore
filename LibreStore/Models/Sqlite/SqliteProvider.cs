@@ -12,21 +12,6 @@ public class SqliteProvider {
         Command = Connection.CreateCommand();
     }
 
-    public Int64 WriteUsage(String action, String ipAddress, String key="", bool shouldInsert=true){
-        if (shouldInsert){
-            ConfigureMainTokenInsert(key);
-        }
-        else{
-            ConfigureMainTokenSelect(key);
-        }
-        var mainTokenId = this.GetOrInsert();
-
-        Usage u = new Usage(mainTokenId,ipAddress,action);
-        ConfigureUsage(u);
-        this.Save();
-        return mainTokenId;
-    }
-
     public int ConfigureMainTokenInsert(String mtKey){
         String sqlCommand = @"insert into maintoken (key)  
                 select $key 
