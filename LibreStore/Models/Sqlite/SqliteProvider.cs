@@ -3,7 +3,7 @@ using LibreStore.Models;
 
 public class SqliteProvider {
 
-    protected SqliteConnection Connection;
+    public SqliteConnection Connection;
     public SqliteCommand Command{get;set;}
         
     public SqliteProvider( String connectionDetails = "Data Source=librestore.db")

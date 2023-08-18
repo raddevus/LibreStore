@@ -100,14 +100,13 @@ public class DataController : Controller
     [HttpGet("GetAllTokens")]
     public ActionResult GetAllTokens(String pwd){
         List<MainToken> allTokens = new List<MainToken>();
-        
-        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
+        DbCommon dbc = new DbCommon(HelperTool.GetDbType(dbType));
         if (HelperTool.Hash(pwd) != "86BC2CA50432385C30E2FAC2923AA6D19F7304E213DAB1D967A8D063BEF50EE1"){
-            dbp.WriteUsage("GetAllTokens - rejected",HelperTool.GetIpAddress(Request),"",false);
+            dbc.WriteUsage("GetAllTokens - rejected",HelperTool.GetIpAddress(Request),"",false);
             return new JsonResult(new {result="false",message="couldn't authenticate request"});
         }
-        dbp.WriteUsage("GetAllTokens",HelperTool.GetIpAddress(Request),"",false);
-        dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
+        dbc.WriteUsage("GetAllTokens",HelperTool.GetIpAddress(Request),"",false);
+        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
         allTokens = dbp.GetAllTokens();
 
         return new JsonResult(allTokens);

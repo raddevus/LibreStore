@@ -2,7 +2,7 @@ using LibreStore.Models;
 using Microsoft.Data.SqlClient;
 public class SqlServerProvider
 {
-    protected SqlConnection Connection;
+    public SqlConnection Connection;
     public SqlCommand Command{get;set;}
         
     /// <summary>

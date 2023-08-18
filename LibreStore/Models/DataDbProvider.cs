@@ -2,26 +2,11 @@ using LibreStore.Models;
 
 public class DataDbProvider: IDataDbProvider{
     
-    public IDataDbProvider dbProvider; 
+    public IDataDbProvider dbProvider;
 
     public DataDbProvider(DbType dbType, String connectionDetails = "")
     {
-        switch (dbType){
-            case DbType.Sqlite:{
-                if (connectionDetails == String.Empty){
-                    connectionDetails = "Data Source=librestore.db";
-                }
-                dbProvider = new SqliteDataProvider(connectionDetails);
-                break;
-            }
-            case DbType.SqlServer:{
-                if (connectionDetails == String.Empty){
-                    connectionDetails = "Server=172.17.0.2;Initial Catalog=LibreStore;User ID=sa;Password=;Encrypt=False;";
-                }
-                dbProvider = new SqlServerDataProvider(connectionDetails);
-                break;
-            }
-        }
+        dbProvider = new DbCommonConnection(dbType, connectionDetails).dbProvider;
     }
 
     public long WriteUsage(string action, string ipAddress, string key = "", bool shouldInsert = true)
