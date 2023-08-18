@@ -1,8 +1,11 @@
+using System.Data.Common;
 using LibreStore.Models;
 
 public class DataDbProvider: IDataDbProvider{
     
     public IDataDbProvider dbProvider;
+
+    
 
     public DataDbProvider(DbType dbType, String connectionDetails = "")
     {
@@ -57,11 +60,6 @@ public class DataDbProvider: IDataDbProvider{
         return dbProvider.GetBucket();
     }
 
-    public long Save()
-    {
-        return dbProvider.Save();
-    }
-
     public List<MainToken> GetAllTokens(){
         return dbProvider.GetAllTokens();
     }
@@ -69,6 +67,4 @@ public class DataDbProvider: IDataDbProvider{
     public Int64 UpdateOwner(){
         return dbProvider.UpdateOwner();
     }
-
-   
 }

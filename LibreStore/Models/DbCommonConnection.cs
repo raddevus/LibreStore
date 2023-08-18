@@ -1,6 +1,6 @@
 using System.Data.Common;
 
-public class DbCommonConnection : IDbCommon
+public class DbCommonConnection // : IDbCommon
 {
     public DbConnection Connection { get ; set; }
     public DbCommand Command { get; set; }

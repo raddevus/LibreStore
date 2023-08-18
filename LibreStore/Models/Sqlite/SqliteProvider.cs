@@ -86,26 +86,4 @@ public class SqliteProvider {
             }
         }
     }
-
-    public Int64 Save(){
-        
-        try{
-            Console.WriteLine("Saving...");
-            Connection.Open();
-            Console.WriteLine("Opened.");
-            // id should be last id inserted into table
-            var id = Convert.ToInt64(Command.ExecuteScalar());
-            Console.WriteLine("inserted.");
-            return id;
-        }
-        catch(Exception ex){
-            Console.WriteLine($"Error: {ex.Message}");
-            return 0;
-        }
-        finally{
-            if (Connection != null){
-                Connection.Close();
-            }
-        }
-    }
 }

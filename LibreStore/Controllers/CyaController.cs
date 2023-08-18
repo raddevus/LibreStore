@@ -33,7 +33,7 @@ public class CyaController : Controller
         ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType));
         Cya c = new Cya(mainTokenId,data,hmac,iv);
         dbp.Configure(c);
-        var cyaId = dbp.Save();
+        var cyaId = dbc.Save();
     
         var jsonResult = new {success=true,CyaId=cyaId};
         return new JsonResult(jsonResult);

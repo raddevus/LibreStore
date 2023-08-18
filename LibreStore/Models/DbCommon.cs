@@ -1,12 +1,12 @@
 using System.Data.Common;
 using LibreStore.Models;
 
-public class DbCommon : IDbCommon
+public class DbCommon //: IDbCommon
 {
     public DbConnection Connection { get; set ; }
     public DbCommand Command { get; set; }
 
-    public IDataDbProvider dbProvider;
+    public IDataDbProvider dbProvider{get;set;}
     public DbCommon(DbType dbType)
     {
         var dbCommonConn = new DbCommonConnection(dbType);

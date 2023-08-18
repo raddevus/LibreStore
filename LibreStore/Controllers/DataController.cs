@@ -51,11 +51,11 @@ public class DataController : Controller
             var jsonErrorResult = new {success=false,message="Couldn't save data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
-        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
         Bucket b = new Bucket(mainTokenId,intent,data,hmac,iv);
-        dbp.ConfigureBucket(b);
         
-        var bucketId = dbp.Save();
+        dbc = new DbCommon(HelperTool.GetDbType(dbType));
+        dbc.dbProvider.ConfigureBucket(b);
+        var bucketId = dbc.Save();
     
         var jsonResult = new {success=true,BucketId=bucketId};
         return new JsonResult(jsonResult);
@@ -145,15 +145,15 @@ public class DataController : Controller
             var jsonErrorResult = new {success=false,message="Couldn't add an owner because of invalid MainToken.Key. Please make sure you're using a valid MainToken Key!"};
             return new JsonResult(jsonErrorResult);
         }
-        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
+        
         Owner o = new Owner(email);
-        dbp.ConfigureOwnerInsert(o.Email);
-        o.ID = dbp.Save();
+        dbc = new DbCommon(HelperTool.GetDbType(dbType));
+        dbc.dbProvider.ConfigureOwnerInsert(o.Email);
+        o.ID = dbc.Save();
         
-        
-        dbp.ConfigureUpdateOwner(new MainToken(key,o.ID));
+        dbc.dbProvider.ConfigureUpdateOwner(new MainToken(key,o.ID));
         Object? jsonResult = null;
-         if (dbp.UpdateOwner() == 0){
+         if (dbc.dbProvider.UpdateOwner() == 0){
             jsonResult = new {success=false,message="Couldn't update the Owner for that MainToken Key. Please try again."};            
          }
          else{

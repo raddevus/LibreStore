@@ -44,9 +44,4 @@ public class CyaDbProvider: ICyaDbProvider{
     {
         return dbProvider.GetCyaBucket();
     }
-
-    public long Save()
-    {
-        return dbProvider.Save();
-    }
 }
