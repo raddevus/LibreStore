@@ -1,17 +1,17 @@
 using System.Data.Common;
 using LibreStore.Models;
 
-public class DbCommon //: IDbCommon
+public class DbCommon : IDbCommon
 {
-    public DbConnection Connection { get; set ; }
-    public DbCommand Command { get; set; }
+    public DbConnection DbConnection { get; set ; }
+    public DbCommand DbCommand { get; set; }
 
     public IDataDbProvider dbProvider{get;set;}
     public DbCommon(DbType dbType)
     {
         var dbCommonConn = new DbCommonConnection(dbType);
-        Connection = dbCommonConn.Connection;
-        Command = dbCommonConn.Command;
+        DbConnection = dbCommonConn.Connection;
+        DbCommand = dbCommonConn.Command;
         dbProvider = dbCommonConn.dbProvider;
     }
 
@@ -26,7 +26,7 @@ public class DbCommon //: IDbCommon
 
         Usage u = new Usage(mainTokenId,ipAddress,action);
         dbProvider.ConfigureUsage(u);
-        this.Save(Connection,Command);
+        this.Save(DbConnection,DbCommand);
     
         return mainTokenId;
     }
@@ -34,9 +34,9 @@ public class DbCommon //: IDbCommon
     public int GetOrInsert(){
         try{
             Console.WriteLine("GetOrInsert...");
-            Connection.Open();
+            DbConnection.Open();
             Console.WriteLine("Opening...");
-            using (var reader = Command.ExecuteReader())
+            using (var reader = DbCommand.ExecuteReader())
             {
                 reader.Read();
                 var id = reader.GetInt32(0);
@@ -50,8 +50,8 @@ public class DbCommon //: IDbCommon
             return 0;
         }
         finally{
-            if (Connection != null){
-                Connection.Close();
+            if (DbConnection != null){
+                DbConnection.Close();
             }
         }
     }
