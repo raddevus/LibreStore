@@ -9,7 +9,8 @@ public class SqlServerCyaProvider : SqlServerProvider, ICyaDbProvider
 
     public SqlServerCyaProvider(String connectionDetails) :base(connectionDetails)
     {
-        
+        DbCommand = Command;
+        DbConnection = Connection;
     }
 
     public int Configure(Cya cya)

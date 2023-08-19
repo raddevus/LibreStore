@@ -7,7 +7,8 @@ public class SqlServerDataProvider : SqlServerProvider, IDataDbProvider{
     public DbConnection DbConnection { get ; set; }
     public SqlServerDataProvider(String connectionDetails): base(connectionDetails)
     {
-        
+        DbCommand = Command;
+        DbConnection = Connection;
     }
 
     public int ConfigureBucket(Bucket bucket)
