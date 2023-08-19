@@ -10,8 +10,22 @@ public class DataDbProvider: IDataDbProvider{
 
     public DataDbProvider(DbType dbType, String connectionDetails = "")
     {
-        dbProvider = new DbCommonConnection(dbType, connectionDetails).dbProvider;
-        
+        switch (dbType){
+            case DbType.Sqlite:{
+                if (connectionDetails == String.Empty){
+                    connectionDetails = "Data Source=librestore.db";
+                }
+                dbProvider = new SqliteDataProvider(connectionDetails);
+                break;
+            }
+            case DbType.SqlServer:{
+                if (connectionDetails == String.Empty){
+                    connectionDetails = "Server=172.17.0.2;Initial Catalog=LibreStore;User ID=sa;Password=;Encrypt=False;";
+                }
+                dbProvider = new SqlServerDataProvider(connectionDetails);
+                break;
+            }
+        }
         // ###################################################
         // THIS IS THE LINE THAT INITS THE DbCommand !!!!!
         // ###################################################
