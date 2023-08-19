@@ -1,5 +1,5 @@
 using LibreStore.Models;
-public interface IDataDbProvider: IDbProvider, IDbCommon{
+public interface IDataDbProvider: IDbCommon{
     int ConfigureBucket(Bucket bucket);
     int ConfigureBucketSelect(String key, Int64 bucketId);
     int ConfigureBucketIdSelect(long mainTokenId);
