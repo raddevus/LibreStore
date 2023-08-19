@@ -3,11 +3,14 @@ using LibreStore.Models;
 using System.Data.Common;
 
 public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
-    public DbCommand DbCommand { get ; set ; }
+    public DbCommand DbCommand { get ; set; }
+    public DbConnection DbConnection { get ; set; }
+
 
     public SqliteDataProvider(String connectionDetails): base(connectionDetails)
     {
-        
+        DbCommand = Command;
+        DbConnection = Connection;
     }
 
     public int ConfigureBucket(Bucket bucket){
@@ -17,7 +20,6 @@ public class SqliteDataProvider : SqliteProvider, IDataDbProvider{
         Command.Parameters.AddWithValue("$data",bucket.Data);
         Command.Parameters.AddWithValue("$hmac",bucket.Hmac);
         Command.Parameters.AddWithValue("$iv",bucket.Iv);
-        DbCommand = Command;
         return 0;
     }
 

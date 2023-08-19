@@ -44,32 +44,6 @@ public class SqlServerProvider
         Command.Parameters.AddWithValue("@Action", usage.Action);
         return 0;
     }
-
-    public int GetOrInsert(){
-        try{
-            Console.WriteLine("GetOrInsert...");
-            Connection.Open();
-            Console.WriteLine("Opening...");
-            using (var reader = Command.ExecuteReader())
-            {
-                reader.Read();
-                var id = reader.GetInt32(0);
-                Console.WriteLine($"GetOrInsert() id: {id}");
-                reader.Close();
-                return id;
-            }
-        }
-        catch(Exception ex){
-            Console.WriteLine($"Error: {ex.Message}");
-            return 0;
-        }
-        finally{
-            if (Connection != null){
-                Connection.Close();
-            }
-        }
-    }
-
     public Int32 DeleteBucket(){
         try{
             Console.WriteLine("DeleteBucket...");

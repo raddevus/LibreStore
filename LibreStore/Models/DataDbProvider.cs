@@ -5,11 +5,18 @@ public class DataDbProvider: IDataDbProvider{
     
     public IDataDbProvider dbProvider;
 
-    
+    public DbCommand DbCommand{ get ; set; }
+    public DbConnection DbConnection { get ; set; }
 
     public DataDbProvider(DbType dbType, String connectionDetails = "")
     {
         dbProvider = new DbCommonConnection(dbType, connectionDetails).dbProvider;
+        
+        // ###################################################
+        // THIS IS THE LINE THAT INITS THE DbCommand !!!!!
+        // ###################################################
+        DbCommand = dbProvider.DbCommand;  // <=== This LINE INITS!!!
+        DbConnection = dbProvider.DbConnection;
     }
 
     public int ConfigureBucket(Bucket bucket){

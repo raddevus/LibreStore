@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using LibreStore.Models;
 using System.Security.Cryptography;
 using System.Text;
+using System.Runtime.Intrinsics.Arm;
 
 namespace LibreStore.Controllers;
 
@@ -33,7 +34,7 @@ public class CyaController : Controller
         ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType));
         Cya c = new Cya(mainTokenId,data,hmac,iv);
         dbp.Configure(c);
-        var cyaId = dbc.Save();
+        var cyaId = dbc.Save(dbp.DbConnection,dbp.DbCommand);
     
         var jsonResult = new {success=true,CyaId=cyaId};
         return new JsonResult(jsonResult);

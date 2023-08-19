@@ -1,28 +1,35 @@
 using Microsoft.Data.Sqlite;
 using LibreStore.Models;
+using System.Data.Common;
+
 public class SqliteCyaProvider : SqliteProvider, ICyaDbProvider{
 
-  public SqliteCyaProvider(String connectionDetails): base(connectionDetails)
+    public DbCommand DbCommand { get ; set; }
+    public DbConnection DbConnection { get ; set; }
+
+    public SqliteCyaProvider(String connectionDetails): base(connectionDetails)
     {
+        DbCommand = Command;
+        DbConnection = Connection;
+    }
+
+    public int Configure(Cya cya){   
+        Command.CommandText = @"INSERT or REPLACE into CyaBucket (mainTokenId,data,hmac,iv)values($mainTokenId,$data,$hmac,$iv);SELECT last_insert_rowid()";
+        Command.Parameters.AddWithValue("$mainTokenId",cya.MainTokenId);
+        Command.Parameters.AddWithValue("$data",cya.Data);
+        Command.Parameters.AddWithValue("$hmac",cya.Hmac);
+        Command.Parameters.AddWithValue("$iv",cya.Iv);
+        return 0;
+    }
+
+    public int ConfigureDelete(long mainTokenId){
+        Command.CommandText = 
+            @"delete from cyabucket
+                where mainTokenId = $id";
+        Command.Parameters.AddWithValue("$id",mainTokenId);
+        return 0;
         
     }
-public int Configure(Cya cya){   
-    Command.CommandText = @"INSERT or REPLACE into CyaBucket (mainTokenId,data,hmac,iv)values($mainTokenId,$data,$hmac,$iv);SELECT last_insert_rowid()";
-    Command.Parameters.AddWithValue("$mainTokenId",cya.MainTokenId);
-    Command.Parameters.AddWithValue("$data",cya.Data);
-    Command.Parameters.AddWithValue("$hmac",cya.Hmac);
-    Command.Parameters.AddWithValue("$iv",cya.Iv);
-    return 0;
-}
-
-public int ConfigureDelete(long mainTokenId){
-    Command.CommandText = 
-        @"delete from cyabucket
-            where mainTokenId = $id";
-    Command.Parameters.AddWithValue("$id",mainTokenId);
-    return 0;
-      
-}
     public int ConfigureSelect(long mainTokenId){
         Command.CommandText = 
             @"select * from cyabucket

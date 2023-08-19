@@ -3,6 +3,8 @@ using System.Data.Common;
 using LibreStore.Models;
 public class SqlServerDataProvider : SqlServerProvider, IDataDbProvider{
 
+    public DbCommand DbCommand{get;set;}
+    public DbConnection DbConnection { get ; set; }
     public SqlServerDataProvider(String connectionDetails): base(connectionDetails)
     {
         

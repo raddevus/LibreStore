@@ -1,9 +1,12 @@
+using System.Data.Common;
 using LibreStore.Models;
 
 public class SqlServerCyaProvider : SqlServerProvider, ICyaDbProvider
 {
-    //private  connection;
-    // public SqliteCommand command{get;set;}
+      
+    public DbCommand DbCommand { get ; set; }
+    public DbConnection DbConnection { get ; set; }
+
     public SqlServerCyaProvider(String connectionDetails) :base(connectionDetails)
     {
         

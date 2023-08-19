@@ -1,7 +1,11 @@
+using System.Data.Common;
 using LibreStore.Models;
 
 public class CyaDbProvider: ICyaDbProvider{
     
+    public DbCommand DbCommand { get ; set; }
+    public DbConnection DbConnection { get ; set; }
+
     public ICyaDbProvider dbProvider; 
 
     public CyaDbProvider(DbType dbType, String connectionDetails = "")
@@ -19,6 +23,8 @@ public class CyaDbProvider: ICyaDbProvider{
                 break;
             }
         }
+        DbCommand = dbProvider.DbCommand;
+        DbConnection = dbProvider.DbConnection;
     }
 
     public int Configure(Cya cya)

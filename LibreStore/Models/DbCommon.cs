@@ -26,7 +26,8 @@ public class DbCommon //: IDbCommon
 
         Usage u = new Usage(mainTokenId,ipAddress,action);
         dbProvider.ConfigureUsage(u);
-        this.Save();
+        this.Save(Connection,Command);
+    
         return mainTokenId;
     }
 
@@ -55,8 +56,7 @@ public class DbCommon //: IDbCommon
         }
     }
 
- public Int64 Save(){
-        
+ public Int64 Save(DbConnection Connection, DbCommand Command){
         try{
             Console.WriteLine("Saving...");
             Connection.Open();

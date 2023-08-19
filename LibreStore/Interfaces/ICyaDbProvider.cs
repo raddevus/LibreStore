@@ -1,5 +1,5 @@
 using LibreStore.Models;
-public interface ICyaDbProvider: IDbProvider{
+public interface ICyaDbProvider: IDbProvider, IDbCommon{
     int Configure(Cya cya);
     int ConfigureDelete(long mainTokenId);
     int ConfigureSelect(long mainTokenId);

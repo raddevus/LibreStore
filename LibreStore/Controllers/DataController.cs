@@ -52,11 +52,16 @@ public class DataController : Controller
             return new JsonResult(jsonErrorResult);    
         }
         Bucket b = new Bucket(mainTokenId,intent,data,hmac,iv);
+
+        // #### BEGIN THE TEST CODE FOR THE dbp.DbCommand!!! #####
+        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
+        Console.WriteLine(dbp.DbCommand.CommandText);
+        // #### END THE TEST CODE FOR THE dbp.DbCommand!!! #####
         
         dbc = new DbCommon(HelperTool.GetDbType(dbType));
-        dbc.dbProvider.ConfigureBucket(b);
-        var bucketId = dbc.Save();
-    
+        dbp.ConfigureBucket(b);
+        var bucketId = dbc.Save(dbp.DbConnection,dbp.DbCommand);
+            
         var jsonResult = new {success=true,BucketId=bucketId};
         return new JsonResult(jsonResult);
     }
@@ -139,6 +144,7 @@ public class DataController : Controller
 
     [HttpGet("AddOwner")]
     public ActionResult AddOwner(String key, String email){
+        
         DbCommon dbc = new DbCommon(HelperTool.GetDbType(dbType));
         var mainTokenId = dbc.WriteUsage("UpdateOwner",HelperTool.GetIpAddress(Request),key,false);
         if (mainTokenId == 0){
@@ -148,8 +154,9 @@ public class DataController : Controller
         
         Owner o = new Owner(email);
         dbc = new DbCommon(HelperTool.GetDbType(dbType));
-        dbc.dbProvider.ConfigureOwnerInsert(o.Email);
-        o.ID = dbc.Save();
+        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
+        dbp.ConfigureOwnerInsert(o.Email);
+        o.ID = dbc.Save(dbp.DbConnection,dbp.DbCommand);
         
         dbc.dbProvider.ConfigureUpdateOwner(new MainToken(key,o.ID));
         Object? jsonResult = null;
