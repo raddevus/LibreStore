@@ -1,29 +1,14 @@
 using System.Data.Common;
 using LibreStore.Models;
 
-public class DataDbProvider: IDataDbProvider{
+public class DataDbProvider: DbCommonConnection, IDataDbProvider{
     public DbCommand DbCommand{ get ; set; }
     public DbConnection DbConnection { get ; set; }
     
     public IDataDbProvider dbProvider;
     public DataDbProvider(DbType dbType, String connectionDetails = "")
     {
-        switch (dbType){
-            case DbType.Sqlite:{
-                if (connectionDetails == String.Empty){
-                    connectionDetails = "Data Source=librestore.db";
-                }
-                dbProvider = new SqliteDataProvider(connectionDetails);
-                break;
-            }
-            case DbType.SqlServer:{
-                if (connectionDetails == String.Empty){
-                    connectionDetails = "Server=172.17.0.2;Initial Catalog=LibreStore;User ID=sa;Password=;Encrypt=False;";
-                }
-                dbProvider = new SqlServerDataProvider(connectionDetails);
-                break;
-            }
-        }
+        dbProvider = CreateDbConnection(dbType, connectionDetails);
         // ###################################################
         // THIS IS THE LINE THAT INITS THE DbCommand !!!!!
         // ###################################################
