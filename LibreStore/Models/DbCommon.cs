@@ -5,12 +5,29 @@ public class DbCommon : IDbCommon{
     public DbCommand DbCommand { get; set; }
     public DbConnection DbConnection { get; set ; }
     private IDataDbProvider dbProvider{get;set;}
-    public DbCommon(DbType dbType)
+    public DbCommon(DbType dbType, String connectionDetails="")
     {
-        var dbCommonConn = new DbCommonConnection(dbType);
-        DbConnection = dbCommonConn.Connection;
-        DbCommand = dbCommonConn.Command;
-        dbProvider = dbCommonConn.dbProvider;
+        switch (dbType){
+            case DbType.Sqlite:{
+                if (connectionDetails == String.Empty){
+                    connectionDetails = "Data Source=librestore.db";
+                }
+                dbProvider = new SqliteDataProvider(connectionDetails);
+                break;
+            }
+            case DbType.SqlServer:{
+                if (connectionDetails == String.Empty){
+                    connectionDetails = "Server=172.17.0.2;Initial Catalog=LibreStore;User ID=sa;Password=;Encrypt=False;";
+                }
+                dbProvider = new SqlServerDataProvider(connectionDetails);
+                break;
+            }
+        }
+        // ###################################################
+        // THIS IS THE LINE THAT INITS THE DbCommand !!!!!
+        // ###################################################
+        DbCommand = dbProvider.DbCommand;  // <=== This LINE INITS!!!
+        DbConnection = dbProvider.DbConnection;
     }
 
      public Int64 WriteUsage(String action, String ipAddress, String key="", bool shouldInsert=true){
