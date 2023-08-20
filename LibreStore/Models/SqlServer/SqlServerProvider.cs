@@ -44,23 +44,4 @@ public class SqlServerProvider
         Command.Parameters.AddWithValue("@Action", usage.Action);
         return 0;
     }
-    public Int32 DeleteBucket(){
-        try{
-            Console.WriteLine("DeleteBucket...");
-            Connection.Open();
-            Console.WriteLine("Opening...");
-            // returns number of records deleted
-            return Command.ExecuteNonQuery();
-            
-        }
-        catch(Exception ex){
-            Console.WriteLine($"Error on delete: {ex.Message}");
-            return -1;
-        }
-        finally{
-            if (Connection != null){
-                Connection.Close();
-            }
-        }
-    }
 }

@@ -31,6 +31,26 @@ public class DbCommon : IDbCommon
         return mainTokenId;
     }
 
+    public Int32 DeleteBucket(DbConnection Connection, DbCommand Command){
+        try{
+            Console.WriteLine("DeleteBucket...");
+            Connection.Open();
+            Console.WriteLine("Opening...");
+            // returns number of records deleted
+            return Command.ExecuteNonQuery();
+            
+        }
+        catch(Exception ex){
+            Console.WriteLine($"Error on delete: {ex.Message}");
+            return -1;
+        }
+        finally{
+            if (Connection != null){
+                Connection.Close();
+            }
+        }
+    }
+
     public int GetOrInsert(){
         try{
             Console.WriteLine("GetOrInsert...");

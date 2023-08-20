@@ -131,7 +131,7 @@ public class DataController : Controller
 
         IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
         dbp.ConfigureBucketDelete(bucketId, mainTokenId);
-        var deletedCount = dbp.DeleteBucket();
+        var deletedCount = dbc.DeleteBucket(dbp.DbConnection,dbp.DbCommand);
         Object? jsonResult = null;
         if (deletedCount > 0){
             jsonResult = new {success=(deletedCount > -1),message="(Encrypted) data & all associated data has been deleted."};

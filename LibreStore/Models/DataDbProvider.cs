@@ -68,10 +68,6 @@ public class DataDbProvider: IDataDbProvider{
         return dbProvider.ConfigureUpdateOwner(mainToken);
     }
 
-    public Int32 DeleteBucket(){
-        return dbProvider.DeleteBucket();
-    }
-
     public List<long> GetAllBucketIds(){
         return dbProvider.GetAllBucketIds();
     }

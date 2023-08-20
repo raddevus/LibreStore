@@ -41,11 +41,6 @@ public class CyaDbProvider: ICyaDbProvider{
         return dbProvider.ConfigureSelect(mainTokenId);
     }
 
-    public int DeleteBucket()
-    {
-        return dbProvider.DeleteBucket();
-    }
-
     public Cya GetCyaBucket()
     {
         return dbProvider.GetCyaBucket();

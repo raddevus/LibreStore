@@ -9,7 +9,6 @@ public interface IDataDbProvider: IDbCommon{
     int ConfigureOwnerInsert(String email);
     int ConfigureUsage(Usage u);
     int ConfigureUpdateOwner(MainToken mainToken);
-    Int32 DeleteBucket();
     List<long> GetAllBucketIds();
     Bucket GetBucket();
     Int64 UpdateOwner();
