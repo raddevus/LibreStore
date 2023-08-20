@@ -6,7 +6,6 @@ public class CyaDbProvider: ICyaDbProvider{
     public DbConnection DbConnection { get ; set; }
 
     public ICyaDbProvider dbProvider; 
-
     public CyaDbProvider(DbType dbType, String connectionDetails = "")
     {
         switch (dbType){
@@ -18,6 +17,9 @@ public class CyaDbProvider: ICyaDbProvider{
                 break;
             }
             case DbType.SqlServer:{
+                if (connectionDetails == String.Empty){
+                    connectionDetails = "Server=172.17.0.2;Initial Catalog=LibreStore;User ID=sa;Password=;Encrypt=False;";
+                }
                 dbProvider = new SqlServerCyaProvider(connectionDetails);
                 break;
             }

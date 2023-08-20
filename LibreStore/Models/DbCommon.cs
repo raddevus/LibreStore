@@ -2,8 +2,8 @@ using System.Data.Common;
 using LibreStore.Models;
 
 public class DbCommon : IDbCommon{
-    public DbConnection DbConnection { get; set ; }
     public DbCommand DbCommand { get; set; }
+    public DbConnection DbConnection { get; set ; }
     private IDataDbProvider dbProvider{get;set;}
     public DbCommon(DbType dbType)
     {
