@@ -6,7 +6,7 @@ public class DbCommon : IDbCommon
     public DbConnection DbConnection { get; set ; }
     public DbCommand DbCommand { get; set; }
 
-    public IDataDbProvider dbProvider{get;set;}
+    private IDataDbProvider dbProvider{get;set;}
     public DbCommon(DbType dbType)
     {
         var dbCommonConn = new DbCommonConnection(dbType);

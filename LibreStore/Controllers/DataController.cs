@@ -157,10 +157,10 @@ public class DataController : Controller
         IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
         dbp.ConfigureOwnerInsert(o.Email);
         o.ID = dbc.Save(dbp.DbConnection,dbp.DbCommand);
-        
-        dbc.dbProvider.ConfigureUpdateOwner(new MainToken(key,o.ID));
+
+        dbp.ConfigureUpdateOwner(new MainToken(key,o.ID));
         Object? jsonResult = null;
-         if (dbc.dbProvider.UpdateOwner() == 0){
+         if (dbp.UpdateOwner() == 0){
             jsonResult = new {success=false,message="Couldn't update the Owner for that MainToken Key. Please try again."};            
          }
          else{
