@@ -2,12 +2,10 @@ using System.Data.Common;
 using LibreStore.Models;
 
 public class DataDbProvider: IDataDbProvider{
-    
-    public IDataDbProvider dbProvider;
-
     public DbCommand DbCommand{ get ; set; }
     public DbConnection DbConnection { get ; set; }
-
+    
+    public IDataDbProvider dbProvider;
     public DataDbProvider(DbType dbType, String connectionDetails = "")
     {
         switch (dbType){

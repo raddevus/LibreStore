@@ -2,7 +2,6 @@ using System.Data.Common;
 using LibreStore.Models;
 
 public class CyaDbProvider: ICyaDbProvider{
-    
     public DbCommand DbCommand { get ; set; }
     public DbConnection DbConnection { get ; set; }
 
