@@ -1,7 +1,7 @@
 namespace LibreStore.Models;
 
 public class Usage{
-    public int Id{get;set;}
+    public Int64 Id{get;set;}
     
     public Int64 MainTokenId{get;set;}
     public String IpAddress{get;set;}

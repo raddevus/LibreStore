@@ -31,7 +31,7 @@ public class DbCommon : DbCommonConnection, IDbCommon{
         return mainTokenId;
     }
 
-    public Int32 DeleteBucket(DbConnection Connection, DbCommand Command){
+    public Int64 DeleteBucket(DbConnection Connection, DbCommand Command){
         try{
             Console.WriteLine("DeleteBucket...");
             Connection.Open();
@@ -51,7 +51,7 @@ public class DbCommon : DbCommonConnection, IDbCommon{
         }
     }
 
-    public int GetOrInsert(){
+    public Int64 GetOrInsert(){
         try{
             Console.WriteLine("GetOrInsert...");
             DbConnection.Open();
@@ -59,7 +59,7 @@ public class DbCommon : DbCommonConnection, IDbCommon{
             using (var reader = DbCommand.ExecuteReader())
             {
                 reader.Read();
-                var id = reader.GetInt32(0);
+                var id = reader.GetInt64(0);
                 Console.WriteLine($"GetOrInsert() id: {id}");
                 reader.Close();
                 return id;

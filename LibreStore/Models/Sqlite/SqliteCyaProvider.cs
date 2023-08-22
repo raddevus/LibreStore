@@ -28,7 +28,6 @@ public class SqliteCyaProvider : SqliteProvider, ICyaDbProvider{
                 where mainTokenId = $id";
         Command.Parameters.AddWithValue("$id",mainTokenId);
         return 0;
-        
     }
     public int ConfigureSelect(long mainTokenId){
         Command.CommandText = 
