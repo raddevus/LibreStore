@@ -53,10 +53,8 @@ public class DataController : Controller
         }
         Bucket b = new Bucket(mainTokenId,intent,data,hmac,iv);
 
-        // #### BEGIN THE TEST CODE FOR THE dbp.DbCommand!!! #####
-        IDataDbProvider dbp = new DataDbProvider(DbType.Sqlite);
-        Console.WriteLine(dbp.DbCommand.CommandText);
-        // #### END THE TEST CODE FOR THE dbp.DbCommand!!! #####
+
+        IDataDbProvider dbp = new DataDbProvider(HelperTool.GetDbType(dbType));
         
         dbc = new DbCommon(HelperTool.GetDbType(dbType));
         dbp.ConfigureBucket(b);
