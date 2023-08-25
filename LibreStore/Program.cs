@@ -1,5 +1,13 @@
+using Microsoft.AspNetCore.HttpOverrides;
+
 var builder = WebApplication.CreateBuilder(args);
 String AllowSpecificOrigins = "AllowSpecificOrigins";
+// Configuring ForwardHeaders so we can get IP address when runnnig NGINX
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 builder.Services.AddHostedService<LifetimeEventsHostedService>();
@@ -19,6 +27,12 @@ builder.Services.AddCors(options =>
             });
 
 var app = builder.Build();
+
+// We only need UseForwardHeaders when running on Linux behind NGINX - to get ip addresses
+if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux)){
+    Console.WriteLine("Running on on Linux...using ForwardHeaders");
+    app.UseForwardedHeaders();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
