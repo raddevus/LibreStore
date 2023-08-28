@@ -1,4 +1,5 @@
 public enum DbType{
     Sqlite,
-    SqlServer
+    SqlServer,
+    Mysql
 }

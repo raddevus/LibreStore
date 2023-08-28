@@ -24,6 +24,13 @@ public abstract class DbCommonConnection{
                 dbProvider = new SqlServerDataProvider(connectionDetails);
                 break;
             }
+            case DbType.Mysql:{
+                if (connectionDetails == String.Empty){
+                    connectionDetails = "Server=172.17.0.2;Database=LibreStore;uid=root;pwd=;Encrypt=False;";
+                }
+                dbProvider = new SqlServerDataProvider(connectionDetails);
+                break;
+            }
         }
         return dbProvider;
     }
