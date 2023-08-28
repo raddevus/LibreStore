@@ -1,6 +1,4 @@
-using MySql.Data;
 using LibreStore.Models;
-using System.Data.Common;
 using MySql.Data.MySqlClient;
 
 public class MysqlProvider {
