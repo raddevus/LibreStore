@@ -6,7 +6,7 @@ public class MysqlProvider {
     public MySqlConnection Connection;
     public MySqlCommand Command{get;set;}
         
-    public MysqlProvider( String connectionDetails = "Server=172.17.0.2;Database=LibreStore;uid=root;pwd=;Encrypt=False;")
+    public MysqlProvider( String connectionDetails = "Server=172.17.0.2;Database=librestore;port=3306;uid=extra;pwd=;SslMode=preferred;")
     {
         Connection = new MySqlConnection(connectionDetails);
         Command = Connection.CreateCommand();
@@ -24,7 +24,7 @@ public class MysqlProvider {
     }
 
     public int ConfigureMainTokenSelect(String mtKey){
-        String sqlCommand = @"select id from maintoken
+        String sqlCommand = @"select id from MainToken
                 where `Key` = @key and active=1";
         
         Command.CommandText = sqlCommand;
@@ -33,7 +33,7 @@ public class MysqlProvider {
     }
 
     public int ConfigureUsage(Usage usage){
-        Command.CommandText = @"INSERT into Usage (maintokenid,ipaddress,action)values(@MainTokenId,@IPAddress,@Action)";
+        Command.CommandText = @"INSERT into `Usage` (maintokenid,ipaddress,action)values(@MainTokenId,@IPAddress,@Action)";
         // Console.WriteLine($"usage.MainTokenId: {usage.MainTokenId}");
         Command.Parameters.AddWithValue("@MainTokenId",usage.MainTokenId);
         Command.Parameters.AddWithValue("@IpAddress",usage.IpAddress);
