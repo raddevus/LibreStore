@@ -12,7 +12,7 @@ public class MysqlDataProvider : MysqlProvider, IDataDbProvider{
 
     public int ConfigureBucket(Bucket bucket)
     {
-        Command.CommandText = @"INSERT into Bucket (mainTokenId,intent,data,hmac,iv)values(@mainTokenId,@intent,@data,@hmac,@iv);SELECT  @@IDENTITY";
+        Command.CommandText = @"INSERT into Bucket (mainTokenId,intent,data,hmac,iv)values(@mainTokenId,@intent,@data,@hmac,@iv);SELECT  LAST_INSERT_ID()";
         Command.Parameters.AddWithValue("@mainTokenId",bucket.MainTokenId);
         Command.Parameters.AddWithValue("@intent",(object)bucket.Intent ?? System.DBNull.Value);
         Command.Parameters.AddWithValue("@data",bucket.Data);

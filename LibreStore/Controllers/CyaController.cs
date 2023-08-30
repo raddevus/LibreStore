@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using LibreStore.Models;
-using System.Security.Cryptography;
-using System.Text;
-using System.Runtime.Intrinsics.Arm;
 
 namespace LibreStore.Controllers;
 

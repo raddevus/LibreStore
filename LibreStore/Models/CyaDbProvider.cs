@@ -23,6 +23,13 @@ public class CyaDbProvider: ICyaDbProvider{
                 dbProvider = new SqlServerCyaProvider(connectionDetails);
                 break;
             }
+            case DbType.Mysql:{
+                if (connectionDetails == String.Empty){
+                    connectionDetails = "Server=172.17.0.2;Database=librestore;port=3306;uid=extra;pwd=;SslMode=preferred;";
+                }
+                dbProvider = new MysqlCyaProvider(connectionDetails);
+                break;
+            }
         }
         DbCommand = dbProvider.DbCommand;
         DbConnection = dbProvider.DbConnection;

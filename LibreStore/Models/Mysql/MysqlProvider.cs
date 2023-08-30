@@ -13,9 +13,7 @@ public class MysqlProvider {
     }
 
     public int ConfigureMainTokenInsert(String mtKey){
-        String sqlCommand = @"insert into MainToken (`Key`) 
-                select @key from MainToken 
-                where not exists  (select `Key` from MainToken where `Key`=@key); 
+        String sqlCommand = @"insert into MainToken (`Key`) select @key where not exists (select `Key` from MainToken where `Key`=@key); 
                 select id from MainToken where `Key`=@key and active=1;";
         
         Command.CommandText = sqlCommand;

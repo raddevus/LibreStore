@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using LibreStore.Models;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace LibreStore.Controllers;
 

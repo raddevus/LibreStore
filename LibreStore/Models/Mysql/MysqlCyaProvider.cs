@@ -1,13 +1,12 @@
 using System.Data.Common;
 using LibreStore.Models;
 
-public class SqlServerCyaProvider : SqlServerProvider, ICyaDbProvider
-{
-      
+public class MysqlCyaProvider : MysqlProvider, ICyaDbProvider{
+     
     public DbCommand DbCommand { get ; set; }
     public DbConnection DbConnection { get ; set; }
 
-    public SqlServerCyaProvider(String connectionDetails) :base(connectionDetails)
+    public MysqlCyaProvider(String connectionDetails) :base(connectionDetails)
     {
         DbCommand = Command;
         DbConnection = Connection;
@@ -15,7 +14,7 @@ public class SqlServerCyaProvider : SqlServerProvider, ICyaDbProvider
 
     public int Configure(Cya cya)
     {
-        Command.CommandText = @"UPDATE cyabucket set data = @data, hmac = @hmac, iv = @iv where mainTokenId = @mainTokenId; IF (@@ROWCOUNT = 0) BEGIN INSERT into CyaBucket (mainTokenId,data,hmac,iv)values(@mainTokenId,@data,@hmac,@iv); SELECT @@IDENTITY; END;";
+        Command.CommandText = @"REPLACE into CyaBucket (data, hmac,iv,mainTokenId) values (@data,@hmac,@iv, @mainTokenId); SELECT LAST_INSERT_ID();";
         Command.Parameters.AddWithValue("@mainTokenId",cya.MainTokenId);
         Command.Parameters.AddWithValue("@data",cya.Data);
         Command.Parameters.AddWithValue("@hmac",cya.Hmac);
@@ -26,7 +25,7 @@ public class SqlServerCyaProvider : SqlServerProvider, ICyaDbProvider
     public int ConfigureDelete(long mainTokenId)
     {
         Command.CommandText = 
-            @"delete from cyabucket
+            @"delete from CyaBucket
                 where mainTokenId = @id";
         Command.Parameters.AddWithValue("@id",mainTokenId);
         return 0;
@@ -35,7 +34,7 @@ public class SqlServerCyaProvider : SqlServerProvider, ICyaDbProvider
     public int ConfigureSelect(long mainTokenId)
     {
         Command.CommandText = 
-            @"select * from cyabucket
+            @"select * from CyaBucket
                 where mainTokenId = @id";
         Command.Parameters.AddWithValue("@id",mainTokenId);
         return 0;
