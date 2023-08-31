@@ -2,6 +2,7 @@ using System.Configuration;
 using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
+
 String AllowSpecificOrigins = "AllowSpecificOrigins";
 // Configuring ForwardHeaders so we can get IP address when runnnig NGINX
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
@@ -31,7 +32,12 @@ builder.Services.AddSingleton<AppConfig>();
 
 var app = builder.Build();
 
-new AppConfig (app.Configuration);
+String dbPassword = String.Empty;
+if (args.Length > 0){
+    dbPassword = args[0];
+}
+
+new AppConfig (app.Configuration,dbPassword);
 
 // We only need UseForwardHeaders when running on Linux behind NGINX - to get ip addresses
 if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux)){
