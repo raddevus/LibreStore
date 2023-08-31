@@ -6,9 +6,9 @@ public class DataDbProvider: DbCommonConnection, IDataDbProvider{
     public DbConnection DbConnection { get ; set; }
     
     public IDataDbProvider dbProvider;
-    public DataDbProvider(DbType dbType, String connectionDetails = "")
+    public DataDbProvider(DbType dbType)
     {
-        dbProvider = CreateDbConnection(dbType, connectionDetails);
+        dbProvider = CreateDbConnection(dbType, AppConfig.ConnectionDetails);
         // ###################################################
         // THIS IS THE LINE THAT INITS THE DbCommand !!!!!
         // ###################################################

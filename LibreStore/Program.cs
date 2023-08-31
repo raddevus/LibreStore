@@ -1,3 +1,4 @@
+using System.Configuration;
 using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,8 +26,12 @@ builder.Services.AddCors(options =>
                                         //.WithMethods("GET");
                 });
             });
+builder.Services.AddSingleton<AppConfig>();
+
 
 var app = builder.Build();
+
+new AppConfig (app.Configuration);
 
 // We only need UseForwardHeaders when running on Linux behind NGINX - to get ip addresses
 if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux)){

@@ -5,9 +5,12 @@ public class DbCommon : DbCommonConnection, IDbCommon{
     public DbCommand DbCommand { get; set; }
     public DbConnection DbConnection { get; set ; }
     private IDataDbProvider dbProvider{get;set;}
-    public DbCommon(DbType dbType, String connectionDetails="")
+
+    
+    public DbCommon(DbType dbType)
     {
-        dbProvider = CreateDbConnection(dbType, connectionDetails);
+        
+        dbProvider = CreateDbConnection(dbType, AppConfig.ConnectionDetails);
         // ###################################################
         // THIS IS THE LINE THAT INITS THE DbCommand !!!!!
         // ###################################################
