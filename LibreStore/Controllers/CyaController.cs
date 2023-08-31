@@ -28,7 +28,7 @@ public class CyaController : Controller
             var jsonErrorResult = new {success=false,message="Couldn't save Cya data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
-        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType));
+        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType), AppConfig.ConnectionDetails);
         Cya c = new Cya(mainTokenId,data,hmac,iv);
         dbp.Configure(c);
         var cyaId = dbc.Save(dbp.DbConnection,dbp.DbCommand);
@@ -46,7 +46,7 @@ public class CyaController : Controller
             return new JsonResult(jsonErrorResult);    
         }
         
-        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType));
+        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType), AppConfig.ConnectionDetails);
         Cya c = new Cya(mainTokenId);
        
         dbp.ConfigureSelect(mainTokenId);
@@ -68,7 +68,7 @@ public class CyaController : Controller
             return new JsonResult(jsonErrorResult);    
         }
 
-        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType));
+        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType), AppConfig.ConnectionDetails);
         Cya c = new Cya(mainTokenId);
 
         dbp.ConfigureDelete(mainTokenId);

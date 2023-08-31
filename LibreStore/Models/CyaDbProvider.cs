@@ -10,21 +10,21 @@ public class CyaDbProvider: ICyaDbProvider{
     {
         switch (dbType){
             case DbType.Sqlite:{
-                if (connectionDetails == String.Empty){
+                if (String.IsNullOrEmpty(connectionDetails)){
                     connectionDetails = "Data Source=librestore.db";
                 }
                 dbProvider = new SqliteCyaProvider(connectionDetails);
                 break;
             }
             case DbType.SqlServer:{
-                if (connectionDetails == String.Empty){
+                if (String.IsNullOrEmpty(connectionDetails)){
                     connectionDetails = "Server=172.17.0.2;Initial Catalog=LibreStore;User ID=sa;Password=;Encrypt=False;";
                 }
                 dbProvider = new SqlServerCyaProvider(connectionDetails);
                 break;
             }
             case DbType.Mysql:{
-                if (connectionDetails == String.Empty){
+                if (String.IsNullOrEmpty(connectionDetails)){
                     connectionDetails = "Server=172.17.0.2;Database=librestore;port=3306;uid=extra;pwd=;SslMode=preferred;";
                 }
                 dbProvider = new MysqlCyaProvider(connectionDetails);
