@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/LibreStore/bin/Debug/net6.0/LibreStore.dll",
+            "program": "${workspaceFolder}/LibreStore/bin/Debug/net8.0/LibreStore.dll",
             "args": ["Add password here for debugging"],
             "cwd": "${workspaceFolder}/LibreStore",
             "stopAtEntry": false,
