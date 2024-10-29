@@ -1,3 +1,9 @@
+create database LibreStore;
+go
+
+use LibreStore;
+go
+
 -- ##########################
 -- MainToken as a Single Line
 CREATE TABLE [MainToken]([ID] BIGINT NOT NULL IDENTITY(1,1),[OwnerId] BIGINT NOT NULL default(0), [Key] NVARCHAR(128) NOT NULL UNIQUE CONSTRAINT minKey check(LEN([Key]) >= 10), [Created] NVARCHAR(30) default (getdate()) CONSTRAINT maxCreated check(LEN(Created) <= 30), [Active] bit default (1));
