@@ -1,7 +1,15 @@
 using System.Configuration;
 using Microsoft.AspNetCore.HttpOverrides;
+using AspNetCoreRateLimit;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add rate limiting services.
+builder.Services.AddMemoryCache();
+builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+builder.Services.Configure<IpRateLimitPolicies>(builder.Configuration.GetSection("IpRateLimitPolicies"));
+builder.Services.AddInMemoryRateLimiting();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
 String AllowSpecificOrigins = "AllowSpecificOrigins";
 // Configuring ForwardHeaders so we can get IP address when runnnig NGINX
@@ -10,6 +18,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.ForwardedHeaders =
         ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 });
+
 // Add services to the container.
 builder.Services.AddControllersWithViews(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 builder.Services.AddHostedService<LifetimeEventsHostedService>();
@@ -28,7 +37,6 @@ builder.Services.AddCors(options =>
                 });
             });
 builder.Services.AddSingleton<AppConfig>();
-
 
 var app = builder.Build();
 
@@ -53,6 +61,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseIpRateLimiting();
 app.UseStaticFiles();
 
 app.UseRouting();
