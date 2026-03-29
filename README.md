@@ -5,9 +5,9 @@
     <p>Without knowing anything else you can create post your data using the following LibreStore WebAPI call:
         https://localhost:7138/data/SaveData?key=MustBeAtLeast10Chars&data=this is the first test data&hmac=fake hmac&iv=fake iv&intent=fake-test
     </p>
-    <h2>Check Out The Live Github Page</h2>
+    <h2>Check Out The Live LibreStore Page</h2>
     <p>
-        Check out my Github page which has additional info and the ability to save test data from your browser at: <a href="https://raddevus.github.io/LibreStore/" target="_blank">https://raddevus.github.io/LibreStore/</a>
+        Check out my Github page which has additional info and the ability to save test data from your browser at: <a href="https://actionmobile.app" target="_blank">https://actionmobile.app</a>
     </p>
     <h2>How Is My Data Made Secure?</h2>
     <p>Here's what you need to know about securing your (or your user's) data.
@@ -46,7 +46,7 @@
         user's Site-Keys when the user decides to store them for retrieval from any other system.
         The Site-Keys are encrypted with a password that only the user knows and they cannot be 
         decrypted unless the proper password is used.
-        <p>You can try the <a href="https://cyapass.com/js/cya.htm" target="_blank">Web version of C'YaPass^</a> at the official site.</p>
+        <p>You can try the <a href="https://cyapass.com/" target="_blank">Web version of C'YaPass^</a> at the official site.</p>
         <p>You can get the Android app at: </p>
         <p>You can get the Windows App at: </p>
         <p>You can get the Linux App at: </p>
