@@ -33,8 +33,9 @@
         </ol>
     </p>
     <h2>What Technology Is LibreStore Built On</h2>
-    <p>It's a .NET Core 6.x/7.x WebAPI written in C#.</p>
+    <p>It's a .NET Core 9.x WebAPI written in C#.</p>
     <p>It uses a Sqlite Database to store the user's data.</p>
+    <p>Implementation has been completed to save to SQl Server & MySQL via app.config changes.</p>
     <h2>Where Can I See the Source Code?</h2>
     <p>At my GitHub repo: 
         <a href="https://github.com/raddevus/LibreStore" target="_blank">LibreStore source at GitHub</a>
