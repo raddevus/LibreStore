@@ -9,6 +9,7 @@ public class SqliteProvider {
         
     public SqliteProvider( String connectionDetails = "Data Source=librestore.db")
     {
+       System.Console.WriteLine($"**** SqliteProvider CTOR - Data Source {connectionDetails} *****");
         Connection = new SqliteConnection(connectionDetails);
         Command = Connection.CreateCommand();
     }

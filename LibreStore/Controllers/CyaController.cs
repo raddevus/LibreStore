@@ -9,11 +9,14 @@ public class CyaController : Controller
 {
     private readonly IConfiguration _config;
     private string dbType;
+    private string webRootPath;
 
-    public CyaController(IConfiguration _configuration){
+    public CyaController(IConfiguration _configuration, IWebHostEnvironment webHostEnvironment){
         _config = _configuration;
         dbType = _config["dbType"];
         Console.WriteLine($"###### {dbType} ##########");
+        webRootPath = webHostEnvironment.WebRootPath;
+        Console.WriteLine($"web rootPath: {webHostEnvironment.WebRootPath}");
     }
 
     [HttpPost("SaveData")]
@@ -28,9 +31,10 @@ public class CyaController : Controller
             var jsonErrorResult = new {success=false,message="Couldn't save Cya data because of invalid MainToken.Key."};
             return new JsonResult(jsonErrorResult);    
         }
-        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType), AppConfig.ConnectionDetails);
+        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType), Path.Combine(webRootPath, HelperTool.Hash(key),"librestore.db"));
         Cya c = new Cya(mainTokenId,data,hmac,iv);
         dbp.Configure(c);
+        
         var cyaId = dbc.Save(dbp.DbConnection,dbp.DbCommand);
     
         var jsonResult = new {success=true,CyaId=cyaId};
@@ -39,6 +43,7 @@ public class CyaController : Controller
 
     [HttpGet("GetData")]
     public ActionResult GetData(String key){
+       Console.WriteLine($"mainToken hash: {HelperTool.Hash(key)}");
         DbCommon dbc = new DbCommon(HelperTool.GetDbType(dbType));
         var mainTokenId = dbc.WriteUsage("GetCyaData",HelperTool.GetIpAddress(Request),key,false);
         if (mainTokenId == 0){
@@ -46,7 +51,7 @@ public class CyaController : Controller
             return new JsonResult(jsonErrorResult);    
         }
         
-        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType), AppConfig.ConnectionDetails);
+        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType), Path.Combine(webRootPath, HelperTool.Hash(key),"librestore.db")); 
         Cya c = new Cya(mainTokenId);
        
         dbp.ConfigureSelect(mainTokenId);
@@ -68,7 +73,7 @@ public class CyaController : Controller
             return new JsonResult(jsonErrorResult);    
         }
 
-        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType), AppConfig.ConnectionDetails);
+        ICyaDbProvider dbp = new CyaDbProvider(HelperTool.GetDbType(dbType), Path.Combine(webRootPath, HelperTool.Hash(key),"librestore.db"));
         Cya c = new Cya(mainTokenId);
 
         dbp.ConfigureDelete(mainTokenId);

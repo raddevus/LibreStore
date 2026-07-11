@@ -7,10 +7,14 @@ public class DbCommon : DbCommonConnection, IDbCommon{
     private IDataDbProvider dbProvider{get;set;}
 
     
-    public DbCommon(DbType dbType)
+    public DbCommon(DbType dbType, string? sqliteDbPath = null)
     {
-        
-        dbProvider = CreateDbConnection(dbType, AppConfig.ConnectionDetails);
+        if (sqliteDbPath == null){ 
+         dbProvider = CreateDbConnection(dbType, AppConfig.ConnectionDetails);
+        }
+        else{
+           dbProvider = CreateDbConnection(dbType, sqliteDbPath);
+        }
         // ###################################################
         // THIS IS THE LINE THAT INITS THE DbCommand !!!!!
         // ###################################################

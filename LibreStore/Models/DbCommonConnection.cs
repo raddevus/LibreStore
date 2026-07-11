@@ -12,6 +12,7 @@ public abstract class DbCommonConnection{
         switch (dbType){
             case DbType.Sqlite:{
                 if (String.IsNullOrEmpty(connectionDetails)){
+                   Console.WriteLine($"**** DBCommonConnection only if connectionDetails not set *****");
                     connectionDetails = "Data Source=librestore.db";
                 }
                 dbProvider = new SqliteDataProvider(connectionDetails);

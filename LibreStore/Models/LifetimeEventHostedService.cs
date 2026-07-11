@@ -34,5 +34,6 @@ internal class LifetimeEventsHostedService : IHostedService
         // TODO: Add database TABLE creation scripts here
         // so they are only called upon start up of service.
         SqliteTableBuilder stb = new SqliteTableBuilder();
+        stb.CreateTables();
     }
 }

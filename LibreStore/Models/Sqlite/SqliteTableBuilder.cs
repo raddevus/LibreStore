@@ -2,7 +2,7 @@ namespace LibreStore.Models;
 using Microsoft.Data.Sqlite;
 public class SqliteTableBuilder{
 
-    private readonly SqliteConnection connection;
+    private SqliteConnection connection;
     public SqliteCommand Command{get;set;}
 
 
@@ -60,22 +60,28 @@ public class SqliteTableBuilder{
                     [Active] BOOLEAN default(1)
                 )" 
             };
-    
-    public SqliteTableBuilder()
+    private string TargetPath{get;set;} 
+    public SqliteTableBuilder(string targetPath = "librestore.db")
     {
-
+         TargetPath = targetPath;
+    }
+    async public Task CreateTables(){ 
         try{
-            connection = new SqliteConnection("Data Source=librestore.db");
+            connection = new SqliteConnection($"Data Source={TargetPath}");
+            Console.WriteLine($"**** SqliteTableBuild: Data Source = librestore.db *****");
             // ########### FYI THE DB is created when it is OPENED ########
             connection.Open();
             Command = connection.CreateCommand();
-            FileInfo fi = new FileInfo("librestore.db");
+            FileInfo fi = new FileInfo($"{TargetPath}");
+            Console.WriteLine($"fi.length : {fi.Length}");
             if (fi.Length == 0){
                 //
-                Console.WriteLine("Adding all tables to librestore.db");
+                Console.WriteLine($"Adding all tables to {TargetPath}");
                 foreach (String tableCreate in allTableCreation){
+                   Console.WriteLine($"{tableCreate}");
                     Command.CommandText = tableCreate;
                     Command.ExecuteNonQuery();
+                    Console.WriteLine("Created table...");
                 }
             }
             Console.WriteLine(connection.DataSource);
@@ -84,5 +90,4 @@ public class SqliteTableBuilder{
             connection?.Close();
         }
     }
-        
 }
