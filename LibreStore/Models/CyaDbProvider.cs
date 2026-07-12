@@ -6,7 +6,7 @@ public class CyaDbProvider: ICyaDbProvider{
     public DbConnection DbConnection { get ; set; }
 
     public ICyaDbProvider dbProvider; 
-    public CyaDbProvider(DbType dbType, String connectionDetails = "")
+    public CyaDbProvider(DbType dbType, String connectionDetails = "", String wwwRoot="")
     {
         switch (dbType){
             case DbType.Sqlite:{
@@ -14,11 +14,10 @@ public class CyaDbProvider: ICyaDbProvider{
                    Console.WriteLine($" CYADBPROVIDER **** ONLY FIRES IF connetionDetails NOT set ****");
                     connectionDetails = "Data Source=librestore.db";
                 }
-                if (!Directory.Exists(Path.GetDirectoryName(connectionDetails))) {Directory.CreateDirectory(Path.GetDirectoryName(connectionDetails));}
+                var userDir = Path.GetDirectoryName(connectionDetails);
+                if (!Directory.Exists(userDir)) {Directory.CreateDirectory(Path.GetDirectoryName(connectionDetails));}
                 if (!File.Exists(connectionDetails)){
-                      File.Create(connectionDetails);
-                      SqliteTableBuilder s = new (connectionDetails);
-                      s.CreateTables();
+                      File.Copy(Path.Combine(wwwRoot,"librestore.db"),Path.Combine(userDir,"librestore.db"));
                 }
                 connectionDetails = $"Data Source={connectionDetails}";
                 Console.WriteLine($"SQLITE TARGET : {connectionDetails}");
