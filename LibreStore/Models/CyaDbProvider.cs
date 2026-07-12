@@ -5,8 +5,9 @@ public class CyaDbProvider: ICyaDbProvider{
     public DbCommand DbCommand { get ; set; }
     public DbConnection DbConnection { get ; set; }
 
-    public ICyaDbProvider dbProvider; 
-    public CyaDbProvider(DbType dbType, String connectionDetails = "", String wwwRoot="")
+    public ICyaDbProvider dbProvider;
+
+    public CyaDbProvider(DbType dbType, String connectionDetails = "", string mainToken="")
     {
         switch (dbType){
             case DbType.Sqlite:{
@@ -14,13 +15,16 @@ public class CyaDbProvider: ICyaDbProvider{
                    Console.WriteLine($" CYADBPROVIDER **** ONLY FIRES IF connetionDetails NOT set ****");
                     connectionDetails = "Data Source=librestore.db";
                 }
-                var userDir = Path.GetDirectoryName(connectionDetails);
-                if (!Directory.Exists(userDir)) {Directory.CreateDirectory(Path.GetDirectoryName(connectionDetails));}
-                if (!File.Exists(connectionDetails)){
-                      File.Copy(Path.Combine(wwwRoot,"librestore.db"),Path.Combine(userDir,"librestore.db"));
+                var hashDirName = HelperTool.Hash(mainToken);
+                var userDir = Path.Combine(connectionDetails, AppConfig.UserRoot, hashDirName);
+                var userDbFile = Path.Combine(userDir, "librestore.db");
+                Console.WriteLine($"##### user dir : {userDir}");
+                if (!Directory.Exists(userDir)) {Directory.CreateDirectory(userDir);}
+                if (!File.Exists(userDbFile)){
+                      File.Copy(Path.Combine(connectionDetails,"librestore.db"),userDbFile);
                 }
-                connectionDetails = $"Data Source={connectionDetails}";
-                Console.WriteLine($"SQLITE TARGET : {connectionDetails}");
+                connectionDetails = $"Data Source={userDbFile}";
+                Console.WriteLine($"SQLITE TARGET : {userDbFile}");
                 dbProvider = new SqliteCyaProvider(connectionDetails);
                 break;
             }

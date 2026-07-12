@@ -3,6 +3,7 @@ using System.Collections;
 public class AppConfig: IEnumerable{
 
     static public String  ConnectionDetails{get;set;}
+    static public String UserRoot{get;set;}
     /// <summary>
     /// User can now add a DB password at command line, which
     /// will replace the <PwdPlaceholder> in the appsettings.json
@@ -15,6 +16,7 @@ public class AppConfig: IEnumerable{
     public AppConfig(IConfiguration config, String dbPassword ="")
     {
         ConnectionDetails = config["connectionDetails"];
+        UserRoot = config["userRoot"];
         if (!String.IsNullOrEmpty(dbPassword)){
             ConnectionDetails = ConnectionDetails.Replace("<PwdPlaceholder>", dbPassword,StringComparison.InvariantCultureIgnoreCase);
         }
