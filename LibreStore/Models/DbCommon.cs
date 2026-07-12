@@ -9,11 +9,16 @@ public class DbCommon : DbCommonConnection, IDbCommon{
     
     public DbCommon(DbType dbType, string? sqliteDbPath = null)
     {
-        if (sqliteDbPath == null){ 
+        if (dbType != DbType.Sqlite){ 
          dbProvider = CreateDbConnection(dbType, AppConfig.ConnectionDetails);
         }
         else{
-           dbProvider = CreateDbConnection(dbType, sqliteDbPath);
+           if (!Directory.Exists(sqliteDbPath)){ Directory.CreateDirectory(Path.GetDirectoryName(sqliteDbPath));}
+           if (!File.Exists(sqliteDbPath)){
+             var endOfMatch = sqliteDbPath.ToLower().IndexOf("wwwroot") + "wwwroot".Length;
+              File.Copy(Path.Combine(sqliteDbPath.Substring(0,endOfMatch),"librestore.db"), sqliteDbPath);
+           }
+           dbProvider = CreateDbConnection(dbType, $"Data Source={sqliteDbPath}");
         }
         // ###################################################
         // THIS IS THE LINE THAT INITS THE DbCommand !!!!!

@@ -24,7 +24,8 @@ public class CyaController : Controller
             [FromForm] String data,
             [FromForm] String hmac,
             [FromForm] String iv){
-        DbCommon dbc = new DbCommon(HelperTool.GetDbType(dbType));
+       var targetDb = Path.Combine(webRootPath,AppConfig.UserRoot,HelperTool.Hash(key), "librestore.db"); 
+       DbCommon dbc = new DbCommon(HelperTool.GetDbType(dbType), targetDb );
         var mainTokenId = dbc.WriteUsage("SaveCyaData",HelperTool.GetIpAddress(Request),key);
         // if mainTokenId == 0 then an error occurred.
         if (mainTokenId == 0){
@@ -44,7 +45,8 @@ public class CyaController : Controller
     [HttpGet("GetData")]
     public ActionResult GetData(String key){
        Console.WriteLine($"mainToken hash: {HelperTool.Hash(key)}");
-        DbCommon dbc = new DbCommon(HelperTool.GetDbType(dbType));
+       var targetDb = Path.Combine(webRootPath,AppConfig.UserRoot,HelperTool.Hash(key), "librestore.db"); 
+        DbCommon dbc = new DbCommon(HelperTool.GetDbType(dbType), targetDb);
         var mainTokenId = dbc.WriteUsage("GetCyaData",HelperTool.GetIpAddress(Request),key,false);
         if (mainTokenId == 0){
             var jsonErrorResult = new {success=false,message="Couldn't retrieve Cya data because of invalid MainToken.Key."};
