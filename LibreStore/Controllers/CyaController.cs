@@ -89,4 +89,19 @@ public class CyaController : Controller
         }
         return new JsonResult(jsonResult);
     }
+
+    [HttpPost("GetDb")]
+    public IResult GetDb([FromForm] String key){
+
+      var userIpAddr = HelperTool.GetIpAddress(Request);
+       var targetDb = Path.Combine(webRootPath,AppConfig.UserRoot,HelperTool.Hash(key), "librestore.db"); 
+
+      Console.WriteLine($"{userIpAddr} : {targetDb}");
+         if (System.IO.File.Exists(targetDb)) {
+         return Results.File(targetDb, "application/x-sqlite3", targetDb);
+      }
+      else{
+         return Results.NotFound();
+      }
+    }
 }
